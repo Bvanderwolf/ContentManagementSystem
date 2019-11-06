@@ -14,13 +14,34 @@
 </head>
 
 <body>
+  <!--link to vue libraby-->
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <div id="app">
+
+    <!--simple list with items. Adding items can be done on button click and text input field-->
     <ul>
       <li v-for="todo in items">{{ todo }}</li>
     </ul>
     <input type="text" v-model="item">
-    <button>Add Item</button>
+    <button @click="items.push(item)">Add Item</button>
+
+    <!--list with objects having a text and checked property, if checked propertie is true show checked text-->
+    <ul>
+      <li v-for="object in objects">
+        {{object.text}}
+        <div v-if="object.checked">checked!</div>
+        <button @click="object.checked = ! object.checked">toggle</button>
+      </li>
+    </ul>
+
+    <!--show tax and total cost on input price. Uses computed properties to compute the tax and total instead of doing it inline-->
+    <input type="text" v-model="price">
+    <p>Tax {{tax}}</p>
+    <p>Total {{total}}</p>
+
+    <!--shows hidden is true text when hidden data is true, else shows hidden is false text-->
+    <h1 v-if="hidden">hidden is true</h1>
+    <h1 v-else>hidden is false</h1>
   </div>
 
   <script>
@@ -30,9 +51,29 @@
       data: {
         item: "",
         items: [
-          "item1",
-          "item2"
-        ]
+          "Simple list item 1",
+          "Simple list item 2"
+        ],
+        hidden: false,
+        objects: [
+          { text: "medium list item 1", checked: true },
+          { text: "medium list item 2", checked: true },
+          { text: "medium list item 3", checked: false },
+          { text: "medium list item 4", checked: true }
+        ],
+
+        price: 100,
+        taxPerc: 0.2
+      },
+
+      computed: {
+        tax: function () {
+          return this.price * this.taxPerc;
+        },
+
+        total: function () {
+          return parseInt(this.price) + parseInt((this.price * this.taxPerc));
+        }
       }
     });
   </script>
