@@ -14,8 +14,6 @@
 </head>
 
 <body>
-  <!--link to vue libraby-->
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <div id="app">
 
     <!--simple list with items. Adding items can be done on button click and text input field-->
@@ -39,12 +37,35 @@
     <p>Tax {{tax}}</p>
     <p>Total {{total}}</p>
 
+    <accordion v-for="componentItem in componentItems" :key="componentItem.id" :item="componentItem"></accordion>
+
     <!--shows hidden is true text when hidden data is true, else shows hidden is false text-->
     <h1 v-if="hidden">hidden is true</h1>
     <h1 v-else>hidden is false</h1>
   </div>
 
+  <!--link to vue libraby-->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
   <script>
+    Vue.component('accordion', {
+      props: ['item'],
+
+      template: `
+        <div>
+          <p>{{item.title}}</p>
+          <p @click="toggle = ! toggle">Details</p>
+          <p v-if="toggle">{{item.description}}</p>
+        </div>
+      `,
+
+      data: function () {
+        return {
+          toggle: false,
+        }
+      }
+    })
+
     new Vue({
       el: '#app',
 
@@ -60,6 +81,11 @@
           { text: "medium list item 2", checked: true },
           { text: "medium list item 3", checked: false },
           { text: "medium list item 4", checked: true }
+        ],
+
+        componentItems: [
+          { id: 1, title: "Title 1", description: "description for tab 1" },
+          { id: 2, title: "Title 2", description: "description for tab 2" }
         ],
 
         price: 100,
