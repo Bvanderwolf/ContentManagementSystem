@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 
 <html lang="en">
 
@@ -92,13 +92,19 @@
         taxPerc: 0.2
       },
 
+      methods: {
+        moneyFormat: function (ammount) {
+          return "$" + ammount;
+        }
+      },
+
       computed: {
         tax: function () {
           return this.price * this.taxPerc;
         },
 
         total: function () {
-          return parseInt(this.price) + parseInt((this.price * this.taxPerc));
+          return parseInt(this.price) + parseInt(this.price * this.taxPerc);
         }
       }
     });
