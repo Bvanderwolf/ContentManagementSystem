@@ -1,82 +1,81 @@
-<!doctype html>
+<!DOCTYPE html>
 
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
 
-<head>
-  <meta charset="utf-8">
+    <title>Benjamin Site</title>
+    <meta name="description" content="The HTML5 Herald" />
+    <meta name="author" content="SitePoint" />
 
-  <title>Benjamin Site</title>
-  <meta name="description" content="The HTML5 Herald">
-  <meta name="author" content="SitePoint">
+    <link rel="stylesheet" href="css/styles.css?v=1.0" />
+  </head>
 
-  <link rel="stylesheet" href="css/styles.css?v=1.0">
+  <body>
+    <!--link to vue libraby-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <div id="app">
+      <!--simple list with items. Adding items can be done on button click and text input field-->
+      <ul>
+        <li v-for="todo in items">{{ todo }}</li>
+      </ul>
+      <input type="text" v-model="item" />
+      <button @click="items.push(item)">Add Item</button>
 
-</head>
+      <!--list with objects having a text and checked property, if checked propertie is true show checked text-->
+      <ul>
+        <li v-for="object in objects">
+          {{ object.text }}
+          <div v-if="object.checked">checked!</div>
+          <button @click="object.checked = ! object.checked">toggle</button>
+        </li>
+      </ul>
 
-<body>
-  <!--link to vue libraby-->
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-  <div id="app">
+      <!--show tax and total cost on input price. Uses computed properties to compute the tax and total instead of doing it inline-->
+      <input type="text" v-model="price" />
+      <p>Tax {{ moneyFormat(tax) }}</p>
+      <p>Total {{ moneyFormat(total) }}</p>
 
-    <!--simple list with items. Adding items can be done on button click and text input field-->
-    <ul>
-      <li v-for="todo in items">{{ todo }}</li>
-    </ul>
-    <input type="text" v-model="item">
-    <button @click="items.push(item)">Add Item</button>
+      <!--shows hidden is true text when hidden data is true, else shows hidden is false text-->
+      <h1 v-if="hidden">hidden is true</h1>
+      <h1 v-else>hidden is false</h1>
+    </div>
 
-    <!--list with objects having a text and checked property, if checked propertie is true show checked text-->
-    <ul>
-      <li v-for="object in objects">
-        {{object.text}}
-        <div v-if="object.checked">checked!</div>
-        <button @click="object.checked = ! object.checked">toggle</button>
-      </li>
-    </ul>
+    <script>
+      new Vue({
+        el: "#app",
 
-    <!--show tax and total cost on input price. Uses computed properties to compute the tax and total instead of doing it inline-->
-    <input type="text" v-model="price">
-    <p>Tax {{tax}}</p>
-    <p>Total {{total}}</p>
+        data: {
+          item: "",
+          items: ["Simple list item 1", "Simple list item 2"],
+          hidden: false,
+          objects: [
+            { text: "medium list item 1", checked: true },
+            { text: "medium list item 2", checked: true },
+            { text: "medium list item 3", checked: false },
+            { text: "medium list item 4", checked: true }
+          ],
 
-    <!--shows hidden is true text when hidden data is true, else shows hidden is false text-->
-    <h1 v-if="hidden">hidden is true</h1>
-    <h1 v-else>hidden is false</h1>
-  </div>
-
-  <script>
-    new Vue({
-      el: '#app',
-
-      data: {
-        item: "",
-        items: [
-          "Simple list item 1",
-          "Simple list item 2"
-        ],
-        hidden: false,
-        objects: [
-          { text: "medium list item 1", checked: true },
-          { text: "medium list item 2", checked: true },
-          { text: "medium list item 3", checked: false },
-          { text: "medium list item 4", checked: true }
-        ],
-
-        price: 100,
-        taxPerc: 0.2
-      },
-
-      computed: {
-        tax: function () {
-          return this.price * this.taxPerc;
+          price: 100,
+          taxPerc: 0.2
         },
 
-        total: function () {
-          return parseInt(this.price) + parseInt((this.price * this.taxPerc));
-        }
-      }
-    });
-  </script>
-</body>
+        methods: {
+          moneyFormat: function(ammount) {
+            return "$" + ammount;
+          }
+        },
 
+        computed: {
+          tax: function() {
+            return this.price * this.taxPerc;
+          },
+
+          total: function() {
+            return parseInt(this.price) + parseInt(this.price * this.taxPerc);
+          }
+        }
+      });
+    </script>
+  </body>
 </html>
