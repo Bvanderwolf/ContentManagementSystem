@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Benjamin Site</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light static-top mb-5 shadow">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Dept Content Management</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Content Management</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="vuepage.html">VueTesting</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="vueImports.html">VueImports</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!--vue testing content-->
+    <div id="app">
+        <!--simple list with items. Adding items can be done on button click and text input field-->
+        <ul>
+            <li v-for="todo in items">{{ todo }}</li>
+        </ul>
+        <input type="text" v-model="item">
+        <button @click="items.push(item)">Add Item</button>
+
+        <!--list with objects having a text and checked property, if checked propertie is true show checked text-->
+        <ul>
+            <li v-for="object in objects">
+                {{object.text}}
+                <div v-if="object.checked">checked!</div>
+                <button @click="object.checked = ! object.checked">toggle</button>
+            </li>
+        </ul>
+
+        <!--show tax and total cost on input price. Uses computed properties to compute the tax and total instead of doing it inline-->
+        <input type="text" v-model="price">
+        <p>Tax {{tax}}</p>
+        <p>Total {{total}}</p>
+
+        <accordion v-for="componentItem in componentItems" :key="componentItem.id" :item="componentItem"></accordion>
+
+        <!--shows hidden is true text when hidden data is true, else shows hidden is false text-->
+        <h1 v-if="hidden">hidden is true</h1>
+        <h1 v-else>hidden is false</h1>
+    </div>
+
+    <!--link to vue libraby-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <!--link to vuecode-->
+    <script src="js/vueTesting.js"></script>
+    </div>
+</body>
+
+</html>

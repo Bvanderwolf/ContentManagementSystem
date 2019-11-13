@@ -5,110 +5,53 @@
 <head>
   <meta charset="utf-8">
 
-  <title>Benjamin Site</title>
-  <meta name="description" content="The HTML5 Herald">
-  <meta name="author" content="SitePoint">
+  <title>Dept Content Management</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <link rel="stylesheet" href="css/styles.css?v=1.0">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
 </head>
 
 <body>
-  <div id="app">
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light static-top mb-5 shadow">
+    <div class="container">
+      <a class="navbar-brand" href="#">Dept Content Management</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+        aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="index.html">Content Management</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="vuepage.html">VueTesting</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="vueImports.html">VueImports</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-    <!--simple list with items. Adding items can be done on button click and text input field-->
-    <ul>
-      <li v-for="todo in items">{{ todo }}</li>
-    </ul>
-    <input type="text" v-model="item">
-    <button @click="items.push(item)">Add Item</button>
+  <!-- content management page content -->
 
-    <!--list with objects having a text and checked property, if checked propertie is true show checked text-->
-    <ul>
-      <li v-for="object in objects">
-        {{object.text}}
-        <div v-if="object.checked">checked!</div>
-        <button @click="object.checked = ! object.checked">toggle</button>
-      </li>
-    </ul>
 
-    <!--show tax and total cost on input price. Uses computed properties to compute the tax and total instead of doing it inline-->
-    <input type="text" v-model="price">
-    <p>Tax {{tax}}</p>
-    <p>Total {{total}}</p>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
 
-    <accordion v-for="componentItem in componentItems" :key="componentItem.id" :item="componentItem"></accordion>
-
-    <!--shows hidden is true text when hidden data is true, else shows hidden is false text-->
-    <h1 v-if="hidden">hidden is true</h1>
-    <h1 v-else>hidden is false</h1>
-  </div>
-
-  <!--link to vue libraby-->
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-
-  <script>
-    Vue.component('accordion', {
-      props: ['item'],
-
-      template: `
-        <div>
-          <p>{{item.title}}</p>
-          <p @click="toggle = ! toggle">Details</p>
-          <p v-if="toggle">{{item.description}}</p>
-        </div>
-      `,
-
-      data: function () {
-        return {
-          toggle: false,
-        }
-      }
-    })
-
-    new Vue({
-      el: '#app',
-
-      data: {
-        item: "",
-        items: [
-          "Simple list item 1",
-          "Simple list item 2"
-        ],
-        hidden: false,
-        objects: [
-          { text: "medium list item 1", checked: true },
-          { text: "medium list item 2", checked: true },
-          { text: "medium list item 3", checked: false },
-          { text: "medium list item 4", checked: true }
-        ],
-
-        componentItems: [
-          { id: 1, title: "Title 1", description: "description for tab 1" },
-          { id: 2, title: "Title 2", description: "description for tab 2" }
-        ],
-
-        price: 100,
-        taxPerc: 0.2
-      },
-
-      methods: {
-        moneyFormat: function (ammount) {
-          return "$" + ammount;
-        }
-      },
-
-      computed: {
-        tax: function () {
-          return this.price * this.taxPerc;
-        },
-
-        total: function () {
-          return parseInt(this.price) + parseInt(this.price * this.taxPerc);
-        }
-      }
-    });
-  </script>
 </body>
 
 </html>

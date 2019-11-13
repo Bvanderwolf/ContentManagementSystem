@@ -11,6 +11,14 @@
    Base styles: opinionated defaults
    ========================================================================== */
 
+body {
+    background: url("../assets/imgs/backAR.jpeg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+  }
+
 html {
   color: #222;
   font-size: 1em;
