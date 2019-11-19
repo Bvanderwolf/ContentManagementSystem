@@ -56,11 +56,11 @@
             scene.add(hlight);
 
             renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(100, 100);
+            renderer.setSize(200, 200);
             document.body.appendChild(renderer.domElement);
             console.log("test");
             let loader = new THREE.GLTFLoader();
-            loader.load('assets/gltfs/scene.gltf', function (gltf) {
+            loader.load('assets/gltfs/headphones/scene.gltf', function (gltf) {
                 scene.add(gltf.scene);
                 renderer.render(scene, camera);
             })
