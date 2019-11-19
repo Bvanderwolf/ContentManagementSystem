@@ -2,7 +2,7 @@ new Vue({
   // root node
   el: "#app",
   // the instance state
-  data: function() {
+  data: function () {
     return {
       features: ["Animation", "Textures", "Low Poly"],
       selection: {
@@ -19,11 +19,11 @@ new Vue({
   },
   methods: {
     // submit form handler
-    submit: function() {
+    submit: function () {
       this.submitted = true;
     },
     // check or uncheck all
-    checkAll: function(event) {
+    checkAll: function (event) {
       this.selection.features = event.target.checked ? this.features : [];
     }
   }
