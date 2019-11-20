@@ -13,8 +13,6 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
 
-  <script src="three.js-master/build/three.js"></script>
-
 </head>
 
 <body>
@@ -23,48 +21,55 @@
   <script>
     function OnInputButtonChange() {
       CheckOnFile();
-      let scene, camera, renderer;
-
-      function init() {
-        scene = new THREE.Scene();
-        scene.background = new THREE.Color(0xddddd);
-
-        camera = new THREE.PerspectiveCamera(40, 1, 1, 5000);
-
-        hlight = new THREE.AmbientLight(0x404040, 100);
-        scene.add(hlight);
-      }
 
       function CheckOnFile() {
         const input = document.querySelector('input[type="file"]');
-        console.log(input.files);
-        const reader = new FileReader();
-        reader.onload = function () {
-          if (IsFileImage(reader.result)) {
+
+        if (input.files) {
+          console.log(input.files);
+          console.log(input.files[0]["type"]);
+          console.log(Is3DModel(input.files[0]));
+        }
+
+
+        if (input.files && IsFileImage(input.files[0]["type"])) {
+          console.log(IsFileImage(input.files[0]["type"]))
+          const reader = new FileReader();
+          reader.onload = function () {
             const img = new Image();
             img.src = reader.result;
             img.width = 100;
             img.height = 100;
-            //document.body.appendChild(img);
+
             var fieldset = document.getElementById("input-fieldset");
             fieldset.insertBefore(
               img,
               fieldset.children[fieldset.childElementCount - 1]
             );
-          }
-        };
+          };
 
-        reader.readAsDataURL(input.files[0]);
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+
+      function Is3DModel(file) {
+        const accepted3DModelTypes = [
+          ".obj",
+          ".glb",
+          ".fbx"
+        ]
+        const name = file["name"];
+        return accepted3DModelTypes.includes(name.substring(name.indexOf(".")));
       }
 
       function IsFileImage(file) {
         const acceptedImageTypes = [
-          "data:image/gif",
-          "data:image/jpeg",
-          "data:image/png"
+          "image/gif",
+          "image/jpeg",
+          "image/png"
         ];
 
-        return file && acceptedImageTypes.includes(file.split(";")[0]);
+        return file && acceptedImageTypes.includes(file);
       }
     }
 
