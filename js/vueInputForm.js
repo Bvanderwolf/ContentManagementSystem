@@ -28,15 +28,22 @@ new Vue({
     },
 
     submitForm: function () {
+      const text = this.message.text;
+      const features = [];
+      const modelType = this.selection.modeltype;
+      const voetbaltaart = "338d81491cc7f65901b4";
+      const url = `https://github.com/login/oauth/authorize?client_id=${voetbaltaart}`;
+
       console.log(this.message.text);
       for (let i = 0; i < this.selection.features.length; i++) {
         console.log(this.selection.features[i]);
+        features.push(this.selection.features[i]);
       }
       console.log(this.selection.features);
       console.log(this.selection.modeltype);
 
       const xhttp = new XMLHttpRequest();
-      xhttp.open("GET", "https://github.com/login/oauth/authorize");
+      xhttp.open("GET", url);
       xhttp.send();
     }
   }
