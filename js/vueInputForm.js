@@ -32,7 +32,7 @@ new Vue({
       const features = [];
       const modelType = this.selection.modeltype;
       const voetbaltaart = "338d81491cc7f65901b4";
-      const url = `https://github.com/login/oauth/authorize?client_id=${voetbaltaart}`;
+      const url = `https://cors-anywhere.herokuapp.com/https://github.com/login/oauth/authorize`;
 
       console.log(this.message.text);
       for (let i = 0; i < this.selection.features.length; i++) {
@@ -44,7 +44,9 @@ new Vue({
 
       const xhttp = new XMLHttpRequest();
       xhttp.open("GET", url);
-      xhttp.send();
+      xhttp.setRequestHeader('Accept', 'application/json');
+      xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      xhttp.send(`client_id=${voetbaltaart}`);
     }
   }
 });
