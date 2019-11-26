@@ -51,26 +51,31 @@
           reader.readAsDataURL(input.files[0]);
         }
       }
+    }
 
-      function Is3DModel(file) {
-        const accepted3DModelTypes = [
-          ".obj",
-          ".glb",
-          ".fbx"
-        ]
-        const name = file["name"];
-        return accepted3DModelTypes.includes(name.substring(name.indexOf(".")));
-      }
+    function Is3DModel(file) {
+      const accepted3DModelTypes = [
+        ".obj",
+        ".glb",
+        ".fbx",
+        ".usdz"
+      ]
+      const name = file["name"];
+      return accepted3DModelTypes.includes(name.substring(name.indexOf(".")));
+    }
 
-      function IsFileImage(file) {
-        const acceptedImageTypes = [
-          "image/gif",
-          "image/jpeg",
-          "image/png"
-        ];
+    function IsFileImage(file) {
+      const acceptedImageTypes = [
+        "image/gif",
+        "image/jpeg",
+        "image/png"
+      ];
 
-        return file && acceptedImageTypes.includes(file);
-      }
+      return file && acceptedImageTypes.includes(file);
+    }
+
+    function SubmitForm() {
+      console.log("submitting form");
     }
 
   </script>
@@ -104,7 +109,7 @@
 
   <!-- content management page content -->
   <div id="app">
-    <form class="vue-form" @submit.prevent="submit">
+    <form class="vue-form" @submit.prevent="submit" @submit="submitForm">
       <fieldset id="input-fieldset">
         <legend>Upload 3D model form</legend>
         <div>
