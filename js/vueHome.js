@@ -33,7 +33,7 @@ new Vue({
                     window.location.assign(window.location.origin + "\inputForm.html" + xhttp.response);
                 }
             } else {
-                url = "https://github.com/login/oauth/authorize?client_id=${voetbaltaart}";
+                url = "https://github.com/login/oauth/authorize?client_id=" + voetbaltaart;
                 window.location.assign(url);
             }
         }
