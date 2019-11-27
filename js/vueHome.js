@@ -31,7 +31,7 @@ new Vue({
                     xhttp.send();
 
                     // Navigate to input form, passing Github response as querystring
-                    window.location.assign(window.location.origin + "\inputForm.html?" + xhttp.response);
+                    window.location.assign(window.location.origin + "\\inputForm.html?" + xhttp.response);
                 }
             } else {
                 // If a code has not been recieved from Github yet, navigate to Github login screen.
