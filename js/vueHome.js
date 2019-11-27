@@ -14,16 +14,23 @@ new Vue({
                 if (queryParams.includes("code")) {
                     const code = queryParams.replace("?code=", "");
 
-                    url = "https://cors-anywhere.herokuapp.com/https://github.com/login/oauth/access_token?code=${code}&client_id=${voetbaltaart}&client_secret=${basketbaltaart}";
+                    url = "https://cors-anywhere.herokuapp.com/https://github.com/login/oauth/access_token?code=" +
+                        code +
+                        "&client_id=" +
+                        voetbaltaart +
+                        "&client_secret=" +
+                        basketbaltaart;
                     const xhttp = new XMLHttpRequest();
+
+
                     xhttp.open("POST", url, true);
                     xhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest");
                     xhttp.setRequestHeader("Accept", "application/json");
                     xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
                     xhttp.send();
-                    xhttp.responseType = "application/json";
+                    xhttp.responseType = "json";
 
-                    window.location.assign(window.location.origin + "inputForm.html" + xhttp.response);
+                    window.location.assign(window.location.origin + "\inputForm.html" + xhttp.response);
                 }
             } else {
                 url = "https://github.com/login/oauth/authorize?client_id=${voetbaltaart}";
