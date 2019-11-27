@@ -12,6 +12,7 @@ new Vue({
             // Get querystring from url
             const queryParams = window.location.href.replace(window.location.origin + "/", "");
             if (queryParams !== "") {
+                // Check if query params includes 'code' because if it doesn't the authorization process is already finished
                 if (queryParams.includes("code")) {
                     // Get Github code from querystring
                     const code = queryParams.replace("?code=", "");
@@ -29,6 +30,13 @@ new Vue({
                     xhttp.open("GET", url, true);
                     xhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest"); // Needed for reverse proxy
                     xhttp.send();
+                    
+                    // Wait until request is fully processed before getting the response
+                    xhttp.onreadystatechange = function() {
+                        if (xhttp.readyState === 4) {
+                    console.log(xhttp.response)
+                        }
+                    } 
 
                     // Navigate to input form, passing Github response as querystring
                     window.location.assign(window.location.origin + "\\inputForm.html?" + xhttp.response);
