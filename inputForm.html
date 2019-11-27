@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+
+  <title>Dept Content Management</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+  <link rel="stylesheet" href="css/inputform.css" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous" />
+
+</head>
+
+<body>
+
+  <!--Input functions-->
+  <script>
+    function OnInputButtonChange() {
+      CheckOnFile();
+
+      function CheckOnFile() {
+        const input = document.querySelector('input[type="file"]');
+
+        if (input.files) {
+          console.log(input.files);
+          console.log(input.files[0]["type"]);
+          console.log(Is3DModel(input.files[0]));
+        }
+
+
+        if (input.files && IsFileImage(input.files[0]["type"])) {
+          console.log(IsFileImage(input.files[0]["type"]))
+          const reader = new FileReader();
+          reader.onload = function () {
+            const img = new Image();
+            img.src = reader.result;
+            img.width = 100;
+            img.height = 100;
+
+            var fieldset = document.getElementById("input-fieldset");
+            fieldset.insertBefore(
+              img,
+              fieldset.children[fieldset.childElementCount - 1]
+            );
+          };
+
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+    }
+
+    function Is3DModel(file) {
+      const accepted3DModelTypes = [
+        ".obj",
+        ".glb",
+        ".fbx",
+        ".usdz"
+      ]
+      const name = file["name"];
+      return accepted3DModelTypes.includes(name.substring(name.indexOf(".")));
+    }
+
+    function IsFileImage(file) {
+      const acceptedImageTypes = [
+        "image/gif",
+        "image/jpeg",
+        "image/png"
+      ];
+
+      return file && acceptedImageTypes.includes(file);
+    }
+
+    function SubmitForm() {
+      console.log("submitting form");
+    }
+
+  </script>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light static-top mb-5 shadow">
+    <div class="container">
+      <a class="navbar-brand" href="#">Dept Content Management</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+        aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="index.html">Content Management</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="vuepage.html">VueTesting</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="vueImports.html">VueImports</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="threeImports.html">ThreeImports</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- content management page content -->
+  <div id="app">
+    <form class="vue-form" @submit.prevent="submit" @submit="submitForm">
+      <fieldset id="input-fieldset">
+        <legend>Upload 3D model form</legend>
+        <div>
+          <h4>Team Member</h4>
+          <p class="select">
+            <select class="budget" v-model="selection.member">
+              <option value="0">Giamo van den Eerenbeemt </option>
+              <option value="1">Benjamin van der Wolf</option>
+              <option value="2">Oscar Hulshof</option>
+              <option value="3">Ryan Zhang</option>
+              <option value="4">My Vu</option>
+            </select>
+          </p>
+        </div>
+
+        <div>
+          <h4>Model Type</h4>
+
+          <ul class="vue-form-list">
+            <li>
+              <input type="radio" name="radio-1" id="radio-1" value="wearable-head" v-model="selection.modeltype" />
+              <label for="radio-1">Wearable-Head</label>
+            </li>
+            <li>
+              <input type="radio" name="radio-2" id="radio-2" value="wearable-body" v-model="selection.modeltype" />
+              <label for="radio-2">Wearable-Body</label>
+            </li>
+            <li>
+              <input type="radio" name="radio-3" id="radio-3" value="placeable" v-model="selection.modeltype" />
+              <label for="radio-3">PlaceAble</label>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4>Features</h4>
+          <ul class="vue-form-list">
+            <li v-for="(feature, index) in features">
+              <input type="checkbox" :value="feature" :id="'cb-feature-'+index" v-model="selection.features" />
+              <label :for="'cb-feature-'+index">{{ feature }}</label>
+            </li>
+            <li>
+              <input type="checkbox" id="checkbox-all" @click="checkAll" />
+              <label for="checkbox-all">Check All</label>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <label class="label" for="textarea">Extra information</label>
+          <textarea class="message" name="textarea" id="textarea" required="" v-model="message.text"
+            :maxlength="message.maxlength"></textarea>
+          <span class="counter">{{ message.text.length }} / {{ message.maxlength }}</span>
+        </div>
+        <div>
+          <input class="filereader" type="file" onchange="OnInputButtonChange()" />
+        </div>
+        <div>
+          <input type="submit" value="Send Info" />
+        </div>
+        <div>
+          <input type="button"	value="Login" @click="loginGit"/>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+
+  <!--link to vue libraby-->
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="js/vueInputForm.js"></script>
+
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

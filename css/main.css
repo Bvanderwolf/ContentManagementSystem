@@ -189,6 +189,39 @@ textarea {
   clear: both;
 }
 
+/*
+Styling for the login button
+*/
+.loginButton {
+  margin-left: 80px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: none;
+  background: #2c3e50;
+  border-radius: 0.25em;
+  padding: 12px 20px;
+  color: #ffffff;
+  font-weight: bold;
+  cursor: pointer;
+  -webkit-font-smoothing: antialiased;
+}
+
+.loginDiv {
+  background-color: white;
+  max-width: 400px;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 400px;
+  border-radius: 4%;
+  padding: 10px;
+}
+
+h3 {
+  font-weight: 500px;
+  font-size: 23px;
+  margin-left: 15%;
+}
+
 /* ==========================================================================
    EXAMPLE Media Queries for Responsive Design.
    These examples override the primary ('mobile first') styles.
