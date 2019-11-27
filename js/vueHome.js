@@ -34,12 +34,10 @@ new Vue({
                     // Wait until request is fully processed before getting the response
                     xhttp.onreadystatechange = function() {
                         if (xhttp.readyState === 4) {
-                    console.log(xhttp.response)
+                            // Navigate to input form, passing Github response as querystring
+                            window.location.assign(window.location.origin + "\\inputForm.html?" + xhttp.response);
                         }
                     } 
-
-                    // Navigate to input form, passing Github response as querystring
-                    window.location.assign(window.location.origin + "\\inputForm.html?" + xhttp.response);
                 }
             } else {
                 // If a code has not been recieved from Github yet, navigate to Github login screen.
