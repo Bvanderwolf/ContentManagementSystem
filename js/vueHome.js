@@ -41,7 +41,7 @@ new Vue({
                 }
             } else {
                 // If a code has not been recieved from Github yet, navigate to Github login screen.
-                url = "https://github.com/login/oauth/authorize?client_id=" + voetbaltaart;
+                url = "https://github.com/login/oauth/authorize?client_id=" + voetbaltaart + "&scope=public_repo";
                 window.location.assign(url);
             }
         }
