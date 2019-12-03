@@ -29,7 +29,7 @@ new Vue({
 
         /*
         Upload file to Github using the Github Content API endpoint. 
-        See https://developer.github.com/v3/repos/contents/ for info.
+        See https://developer.github.com/v3/repos/contents/#create-or-update-a-file for info.
         
         TODO
         - Get file from view and upload file instead of test.txt (replace test.txt in 'url' constant)
@@ -38,20 +38,17 @@ new Vue({
         - Show message that upload was successful or show error message
         */
         submitForm: function() {
-            // Get access token from current url
-            const queryParams = window.location.href.replace(window.location.origin + "/inputForm.html?", "");
-            var access_token = queryParams.replace("&scope=public_repo&token_type=bearer", "");
-            access_token = access_token.replace("access_token=", "");
+            const accessToken = this.getGithubAccessToken();
 
             // TODO: Replace test.txt with actual model from view
-            const url = "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/test.txt";
+            const url = "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/test.txt";
             // TODO: Replace content with actual content from file to upload
             const requestData = { message: this.message.text, content: "dGVzdA=="};
 
             const xhttp = new XMLHttpRequest();
             xhttp.open("PUT", url, true);
             // Authorize
-            xhttp.setRequestHeader("Authorization", "token " + access_token);
+            xhttp.setRequestHeader("Authorization", "token " + accessToken);
 
             xhttp.send(JSON.stringify(requestData));
 
@@ -63,6 +60,15 @@ new Vue({
             } 
             
             // TODO: show user that upload was successful or show error message
+        },
+        
+        // Get access token for Github from url
+        getGithubAccessToken: function() {
+            const queryParams = window.location.href.replace(window.location.origin + "/inputForm.html?", "");
+            var access_token = queryParams.replace("&scope=public_repo&token_type=bearer", "");
+            access_token = access_token.replace("access_token=", "");
+
+            return access_token;
         }
     }
 });
