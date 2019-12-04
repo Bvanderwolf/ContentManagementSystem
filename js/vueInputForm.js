@@ -106,6 +106,7 @@ new Vue({
       const accessToken = this.getGithubAccessToken();
 
       console.log(this.filename);
+      console.log(this.filecontent);
       // TODO: Replace test.txt with actual model from view
       const url =
         "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/" +
