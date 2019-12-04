@@ -98,7 +98,7 @@ new Vue({
 
       const url =
         "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/model" +
-        (getModelNamesFromGithub() + 1).toString();
+        (this.getModelNamesFromGithub() + 1).toString();
 
       const requestData = { message: this.message.text, content: this.filecontent };
 
