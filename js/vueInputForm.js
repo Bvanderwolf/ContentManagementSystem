@@ -133,7 +133,7 @@ new Vue({
         xhttp.open("GET", url, true)
         xhttp.send()
     
-        const response = ""
+        var response = ""
 
         xhttp.onreadystatechange = function() {
           if (xhttp.readyState === 4) {
