@@ -98,7 +98,7 @@ new Vue({
 
       const url =
         "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/" +
-        this.filename;
+        (getModelNamesFromGithub + 1).toString();
 
       const requestData = { message: this.message.text, content: this.filecontent };
 
@@ -124,6 +124,31 @@ new Vue({
       access_token = access_token.replace("access_token=", "");
 
       return access_token;
+    }
+    
+    getModelNamesFromGithub: function() {
+      try {
+        const xhttp = new XMLHttpRequest();
+        const url = "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models"
+        xhttp.open("GET", url, true)
+        xhttp.send()
+    
+        const response = ""
+
+        xhttp.onreadystatechange = function() {
+          if (xhttp.readyState === 4) {
+            response = xhttp.response
+          }
+        };
+        
+        var content = JSON.parse(response)
+        const id = content[content.length - 1].name.split("l")[1].split(".")[0]
+
+        return parseInt(id)
+      }
+      catch {
+        return -1;
+      }
     }
   }
 });
