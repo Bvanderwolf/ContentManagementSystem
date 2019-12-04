@@ -11,7 +11,7 @@ new Vue({
         features: []
       },
       message: {
-        text: ``,
+        text: `type commit message here`,
         maxlength: 255
       },
       submitted: false,
@@ -107,12 +107,15 @@ new Vue({
 
       console.log(this.filename);
       console.log(this.filecontent);
+      this.filecontent = this.filecontent.split(",")[1];
+      if (this.message.text == `type commit message here`) {
+        this.message.text = "added model with name " + this.filename;
+      }
       // TODO: Replace test.txt with actual model from view
       const url =
         "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/" +
         this.filename;
 
-      const reader = new FileReader();
       // TODO: Replace content with actual content from file to upload
       const requestData = { message: this.message.text, content: this.filecontent };
 
