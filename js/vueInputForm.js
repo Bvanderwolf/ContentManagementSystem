@@ -97,7 +97,7 @@ new Vue({
       }
 
       const url =
-        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/" +
+        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/model" +
         (getModelNamesFromGithub + 1).toString();
 
       const requestData = { message: this.message.text, content: this.filecontent };
@@ -124,7 +124,7 @@ new Vue({
       access_token = access_token.replace("access_token=", "");
 
       return access_token;
-    }
+    },
     
     getModelNamesFromGithub: function() {
       try {
