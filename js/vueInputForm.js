@@ -46,13 +46,8 @@ new Vue({
       const input = document.querySelector('input[type="file"]');
 
       if (input.files) {
-        console.log(input.files);
-        console.log(input.files[0]["type"]);
-        console.log(this.Is3DModel(input.files[0]));
-
         if (this.IsFileImage(input.files[0]["type"])) {
           const reader = new FileReader();
-          console.log(this.IsFileImage(input.files[0]["type"]));
 
           reader.onload = function() {
             const img = new Image();
@@ -65,6 +60,8 @@ new Vue({
           };
 
           reader.readAsDataURL(input.files[0]);
+          
+          // Convert content to Base64
         } else if (this.Is3DModel(input.files[0])) {
           const ToBase64 = file =>
             new Promise((resolve, reject) => {
@@ -72,51 +69,37 @@ new Vue({
               reader.readAsDataURL(file);
               reader.onload = () => resolve(reader.result);
               reader.onerror = () => reject(error);
-
-              console.log("test");
-              console.log("3d model loaded");
-              this.fileloaded = true;
-              this.filecontent = reader.result;
-              this.filename = file["name"];
-              console.log(this.filename);
             });
 
+          this.filename = input.files[0].name;
+          // Wait until content is processed completely
           this.filecontent = await ToBase64(input.files[0]);
-          console.log(this.filecontent);
+          this.fileloaded = true;
         }
       }
     },
 
     /*
-        Upload file to Github using the Github Content API endpoint. 
-        See https://developer.github.com/v3/repos/contents/#create-or-update-a-file for info.
-        
-        TODO
-        - Get file from view and upload file instead of test.txt (replace test.txt in 'url' constant)
-        - Get Base64 encoded content from file and replace 'content: "dgVzdA==" with file content
-        - Convert function to async await to improve performance
-        - Show message that upload was successful or show error message
-        */
+      Upload file to Github using the Github Content API endpoint. 
+      See https://developer.github.com/v3/repos/contents/#create-or-update-a-file for info.
+    */
     submitForm: function() {
       if (!this.fileloaded) {
-        console.log("file is not loaded yet");
         return;
       }
 
       const accessToken = this.getGithubAccessToken();
 
-      console.log(this.filename);
-      console.log(this.filecontent);
+      // Remove header to get valid Base64 encoded content
       this.filecontent = this.filecontent.split(",")[1];
       if (this.message.text == `type commit message here`) {
         this.message.text = "added model with name " + this.filename;
       }
-      // TODO: Replace test.txt with actual model from view
+
       const url =
         "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/" +
         this.filename;
 
-      // TODO: Replace content with actual content from file to upload
       const requestData = { message: this.message.text, content: this.filecontent };
 
       const xhttp = new XMLHttpRequest();
@@ -129,19 +112,14 @@ new Vue({
       // Wait until response from Github is fully recieved
       xhttp.onreadystatechange = function() {
         if (xhttp.readyState === 4) {
-          console.log(xhttp.response);
+          window.alert("File uploaded")
         }
       };
-
-      // TODO: show user that upload was successful or show error message
     },
 
     // Get access token for Github from url
     getGithubAccessToken: function() {
-      const queryParams = window.location.href.replace(
-        window.location.origin + "/inputForm.html?",
-        ""
-      );
+      const queryParams = window.location.href.replace(window.location.origin + "/inputForm.html?","");
       var access_token = queryParams.replace("&scope=public_repo&token_type=bearer", "");
       access_token = access_token.replace("access_token=", "");
 
