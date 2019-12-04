@@ -16,7 +16,8 @@ new Vue({
       },
       submitted: false,
       filename: "",
-      filecontent: ""
+      filecontent: "",
+      fileloaded: false
     };
   },
   methods: {
@@ -41,16 +42,16 @@ new Vue({
       return file && acceptedImageTypes.includes(file);
     },
 
-    OnInputButtonChange: function() {
+    OnInputButtonChange: async function() {
       const input = document.querySelector('input[type="file"]');
 
       if (input.files) {
         console.log(input.files);
         console.log(input.files[0]["type"]);
         console.log(this.Is3DModel(input.files[0]));
-        const reader = new FileReader();
 
         if (this.IsFileImage(input.files[0]["type"])) {
+          const reader = new FileReader();
           console.log(this.IsFileImage(input.files[0]["type"]));
 
           reader.onload = function() {
@@ -65,15 +66,23 @@ new Vue({
 
           reader.readAsDataURL(input.files[0]);
         } else if (this.Is3DModel(input.files[0])) {
-          console.log("test");
-          reader.onload = function() {
-            console.log("3d model loaded");
-            this.filecontent = reader.result;
-            this.filename = input.files[0]["name"];
-            console.log(this.filename);
-            console.log(this.filecontent);
-          };
-          reader.readAsDataURL(input.files[0]);
+          const ToBase64 = file =>
+            new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.readAsDataURL(file);
+              reader.onload = () => resolve(reader.result);
+              reader.onerror = () => reject(error);
+
+              console.log("test");
+              console.log("3d model loaded");
+              this.fileloaded = true;
+              this.filecontent = reader.result;
+              this.filename = file["name"];
+              console.log(this.filename);
+            });
+
+          this.filecontent = await ToBase64(input.files[0]);
+          console.log(this.filecontent);
         }
       }
     },
@@ -89,16 +98,22 @@ new Vue({
         - Show message that upload was successful or show error message
         */
     submitForm: function() {
+      if (!this.fileloaded) {
+        console.log("file is not loaded yet");
+        return;
+      }
+
       const accessToken = this.getGithubAccessToken();
 
+      console.log(this.filename);
       // TODO: Replace test.txt with actual model from view
       const url =
         "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/" +
-        this.file.name;
+        this.filename;
 
       const reader = new FileReader();
       // TODO: Replace content with actual content from file to upload
-      const requestData = { message: this.message.text, content: this.file };
+      const requestData = { message: this.message.text, content: this.filecontent };
 
       const xhttp = new XMLHttpRequest();
       xhttp.open("PUT", url, true);
