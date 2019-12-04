@@ -16,8 +16,7 @@ new Vue({
       },
       submitted: false,
       filename: "",
-      filecontent: "",
-      fileloaded: false
+      filecontent: ""
     };
   },
   methods: {
@@ -68,7 +67,6 @@ new Vue({
         } else if (this.Is3DModel(input.files[0])) {
           console.log("test");
           reader.onload = function() {
-            this.fileloaded = true;
             console.log("3d model loaded");
             this.filecontent = reader.result;
             this.filename = input.files[0]["name"];
@@ -91,10 +89,6 @@ new Vue({
         - Show message that upload was successful or show error message
         */
     submitForm: function() {
-      if (!this.fileloaded) {
-        return;
-      }
-
       const accessToken = this.getGithubAccessToken();
 
       // TODO: Replace test.txt with actual model from view
