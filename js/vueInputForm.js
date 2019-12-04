@@ -138,13 +138,12 @@ new Vue({
         xhttp.onreadystatechange = function() {
           if (xhttp.readyState === 4) {
             response = xhttp.response
+            var content = JSON.parse(response)
+            const id = content[content.length - 1].name.split("l")[1].split(".")[0]
+
+            return parseInt(id)
           }
         };
-        
-        var content = JSON.parse(response)
-        const id = content[content.length - 1].name.split("l")[1].split(".")[0]
-
-        return parseInt(id)
       }
       catch {
         return -1;
