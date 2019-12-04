@@ -31,7 +31,7 @@ new Vue({
     },
 
     Is3DModel: function(file) {
-      const accepted3DModelTypes = [".obj", ".glb", ".fbx", ".usdz"];
+      const accepted3DModelTypes = [".json", ".usdz"];
       const name = file.name;
       return accepted3DModelTypes.includes(name.substring(name.lastIndexOf(".")));
     },
