@@ -42,7 +42,7 @@ new Vue({
       return file && acceptedImageTypes.includes(file);
     },
 
-    OnInputButtonChange: async function() {
+    OnInputButtonChange: function() {
       const input = document.querySelector('input[type="file"]');
 
       if (input.files) {
@@ -63,6 +63,7 @@ new Vue({
 
           // Convert content to Base64
         } else if (this.Is3DModel(input.files[0])) {
+          console.log("file loading");
           const ToBase64 = file =>
             new Promise((resolve, reject) => {
               const reader = new FileReader();
