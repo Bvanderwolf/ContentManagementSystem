@@ -100,11 +100,13 @@ new Vue({
 
       let id = 0;
       let fileExtension = this.filename.split(".")[1];
-      
+
       id = await this.getNextModelIdAsync();
-      
+
       const url =
-        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/model" + id + "." +
+        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/model" +
+        id +
+        "." +
         fileExtension;
 
       const requestData = { message: this.message.text, content: this.filecontent };
@@ -136,12 +138,26 @@ new Vue({
       return access_token;
     },
 
-      async getNextModelIdAsync() {
-      let response = await fetch("https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models");
+    async getNextModelIdAsync() {
+      let response = await fetch(
+        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models"
+      );
       let data = await response.json();
       let content = JSON.parse(response);
       let id = content.length;
       return id;
+    },
+
+    //creates package usable for JBL website
+    CreateJSONPackageObject(title, description, basestringFoto, baseStringModel, modelType, price) {
+      var obj = new Object();
+      obj.title = title;
+      obj.description = description;
+      obj.basestringFoto = basestringFoto;
+      obj.baseStringModel = baseStringModel;
+      obj.modeltype = modelType;
+      obj.price = price;
+      return JSON.parse(JSON.stringify(obj));
     }
   }
 });

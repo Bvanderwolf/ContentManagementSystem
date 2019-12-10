@@ -54,7 +54,7 @@
 
     <!-- content management page content -->
     <div id="app">
-      <form class="vue-form" @submit.prevent="submit" @submit="submitForm">
+      <form class="vue-form" @submit.prevent="submit" @submit="submitFormAsync">
         <fieldset id="input-fieldset">
           <legend>Upload 3D model form</legend>
           <div>
@@ -142,7 +142,7 @@
             <p>Upload your 3D model supported formats: .json & .usdz</p>
           </div>
           <div>
-            <input type="submit" value="Send Info"/>
+            <input type="submit" value="Send Info" />
           </div>
         </fieldset>
       </form>
