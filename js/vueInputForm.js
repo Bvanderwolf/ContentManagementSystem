@@ -98,15 +98,12 @@ new Vue({
         this.message.text = "added model with name " + this.filename;
       }
 
-      let id = 0;
       let fileExtension = this.filename.substring(this.filename.lastIndexOf("."));
-
-      id = await this.getNextModelIdAsync();
+      let id = await this.getNextModelIdAsync();
 
       const url =
         "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/model" +
         id +
-        "." +
         fileExtension;
 
       const requestData = { message: this.message.text, content: this.filecontent };
@@ -143,11 +140,7 @@ new Vue({
         "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models"
       );
       var json = await response.json();
-      console.log(json);
-      console.log(response);
-
-      let id = response.length;
-      return id;
+      return json.length + 1;
     },
 
     //creates package usable for JBL website
