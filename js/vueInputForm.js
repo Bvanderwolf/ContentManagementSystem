@@ -121,11 +121,9 @@ new Vue({
       let id = await this.getNextModelIdAsync();
 
       const url =
-        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/model" +
-        id +
-        ".json";
+        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/model" + id;
 
-      const requestData = { message: this.message.text, content: this.package };
+      const requestData = { message: this.message.text, content: this.filecontent };
 
       const xhttp = new XMLHttpRequest();
       xhttp.open("PUT", url, true);
@@ -171,7 +169,7 @@ new Vue({
       obj.baseStringModel = baseStringModel;
       obj.modeltype = modelType;
       obj.price = price;
-      return JSON.parse(JSON.stringify(obj));
+      return JSON.stringify(obj);
     }
   }
 });
