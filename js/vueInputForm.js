@@ -42,7 +42,7 @@ new Vue({
       return file && acceptedImageTypes.includes(file);
     },
 
-    OnInputButtonChange: function() {
+    OnInputButtonChange: async function() {
       const input = document.querySelector('input[type="file"]');
 
       if (input.files) {
@@ -98,11 +98,14 @@ new Vue({
         this.message.text = "added model with name " + this.filename;
       }
 
+      let id = 0;
+      let fileExtension = this.filename.split(".")[1]
+      
+      getNextModelIdAsync.then(id => id);
+      
       const url =
-        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/model" +
-        (this.getNextModelId()).toString() +
-        "." +
-        this.filename.split(".")[1];
+        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/model" + id + "." +
+        fileExtension;
 
       const requestData = { message: this.message.text, content: this.filecontent };
 
@@ -133,7 +136,7 @@ new Vue({
       return access_token;
     },
 
-    getNextModelId: async function() {
+    getNextModelIdAsync: async function() {
       let response = await fetch("https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models")
       let data = await response.json()
       let content = JSON.parse(response);
