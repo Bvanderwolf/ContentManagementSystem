@@ -83,6 +83,8 @@ new Vue({
 
             // Wait until content is processed completely
             this.filecontent = await ToBase64(inputfile);
+            // Remove header to get valid Base64 encoded content
+            this.filecontent = this.filecontent.split(",")[1];
             this.filename = inputfile.name;
             this.fileloaded = true;
 
@@ -111,8 +113,6 @@ new Vue({
 
       const accessToken = this.getGithubAccessToken();
 
-      // Remove header to get valid Base64 encoded content
-      this.filecontent = this.filecontent.split(",")[1];
       if (this.message.text == `type commit message here`) {
         this.message.text = "added model with name " + this.filename;
       }
@@ -123,7 +123,7 @@ new Vue({
       const url =
         "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/model" + id;
 
-      const requestData = { message: this.message.text, content: this.filecontent };
+      const requestData = { message: this.message.text, content: this.package };
 
       const xhttp = new XMLHttpRequest();
       xhttp.open("PUT", url, true);
