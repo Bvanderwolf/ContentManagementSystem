@@ -111,13 +111,13 @@ new Vue({
         this.message.text = "added model with name " + this.filename;
       }
 
-      let fileExtension = this.filename.substring(this.filename.lastIndexOf("."));
+      //let fileExtension = this.filename.substring(this.filename.lastIndexOf("."));
       let id = await this.getNextModelIdAsync();
 
       const url =
         "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/model" +
         id +
-        fileExtension;
+        ".json";
 
       const requestData = { message: this.message.text, content: this.package };
 

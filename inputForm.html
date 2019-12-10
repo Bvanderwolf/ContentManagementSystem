@@ -117,7 +117,7 @@
           </div>
           <div>
             <label class="label" for="input">Product Price</label>
-            <input type="text" :value="price" v-model="price" />
+            <input type="text" :value="price" />
           </div>
           <div>
             <label class="label" for="textarea">Extra information</label>
@@ -130,6 +130,9 @@
               :maxlength="message.maxlength"
             ></textarea>
             <span class="counter">{{ message.text.length }} / {{ message.maxlength }}</span>
+          </div>
+          <div>
+            <input class="filereader" type="file" />
           </div>
           <div>
             <input class="filereader" type="file" @change="OnInputButtonChange" />
