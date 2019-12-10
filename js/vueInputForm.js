@@ -85,6 +85,7 @@ new Vue({
     */
     submitForm: function() {
       if (!this.fileloaded) {
+        Console.log("file not loaded yet");
         return;
       }
 
