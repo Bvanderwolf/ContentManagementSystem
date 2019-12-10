@@ -85,7 +85,7 @@ new Vue({
     */
     submitForm: function() {
       if (!this.fileloaded) {
-        Console.log("file not loaded yet");
+        console.log("file not loaded yet");
         return;
       }
 
@@ -146,9 +146,9 @@ new Vue({
           if (xhttp.readyState === 4) {
             response = xhttp.response;
             var content = JSON.parse(response);
-            Console.log(content);
+            console.log(content);
             const id = content[content.length - 1].name.split("l")[1].split(".")[0];
-            Console.log("id: " + id);
+            console.log("id: " + id);
             return parseInt(id);
           }
         };
