@@ -17,7 +17,8 @@ new Vue({
       submitted: false,
       filename: "",
       filecontent: "",
-      fileloaded: false
+      fileloaded: false,
+      package: null
     };
   },
   methods: {
@@ -46,7 +47,8 @@ new Vue({
       const input = document.querySelector('input[type="file"]');
 
       if (input.files) {
-        if (this.IsFileImage(input.files[0]["type"])) {
+        const inputfile = input.files[0];
+        if (this.IsFileImage(inputfile["type"])) {
           const reader = new FileReader();
 
           reader.onload = function() {
@@ -59,23 +61,33 @@ new Vue({
             fieldset.insertBefore(img, fieldset.children[fieldset.childElementCount - 1]);
           };
 
-          reader.readAsDataURL(input.files[0]);
+          reader.readAsDataURL(inputfile);
 
           // Convert content to Base64
-        } else if (this.Is3DModel(input.files[0])) {
-          console.log("file loading");
-          const ToBase64 = file =>
-            new Promise((resolve, reject) => {
-              const reader = new FileReader();
-              reader.readAsDataURL(file);
-              reader.onload = () => resolve(reader.result);
-              reader.onerror = () => reject(error);
-            });
+        } else {
+          if (this.Is3DModel(inputfile)) {
+            console.log("file loading");
+            const ToBase64 = file =>
+              new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject(error);
+              });
 
-          this.filename = input.files[0].name;
-          // Wait until content is processed completely
-          this.filecontent = await ToBase64(input.files[0]);
-          this.fileloaded = true;
+            // Wait until content is processed completely
+            this.filecontent = await ToBase64(inputfile);
+            this.filename = inputfile.name;
+            this.fileloaded = true;
+            this.package = this.createJSONPackageObject(
+              this.filename,
+              this.message.text,
+              "testbase64",
+              this.filecontent,
+              "IOS",
+              "100 euro"
+            );
+          }
         }
       }
     },
@@ -106,7 +118,7 @@ new Vue({
         id +
         fileExtension;
 
-      const requestData = { message: this.message.text, content: this.filecontent };
+      const requestData = { message: this.message.text, content: this.package };
 
       const xhttp = new XMLHttpRequest();
       xhttp.open("PUT", url, true);
@@ -148,7 +160,7 @@ new Vue({
     },
 
     //creates package usable for JBL website
-    CreateJSONPackageObject(title, description, basestringFoto, baseStringModel, modelType, price) {
+    createJSONPackageObject(title, description, basestringFoto, baseStringModel, modelType, price) {
       var obj = new Object();
       obj.title = title;
       obj.description = description;
