@@ -131,7 +131,7 @@ new Vue({
       // Authorize
       xhttp.setRequestHeader("Authorization", "token " + accessToken);
 
-      xhttp.send(JSON.stringify(requestData));
+      xhttp.send(JSON.parse(JSON.stringify(requestData)));
 
       // Wait until response from Github is fully recieved
       xhttp.onreadystatechange = function() {
