@@ -142,9 +142,7 @@ new Vue({
       let response = await fetch(
         "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models"
       );
-      let data = await response.json();
-      let content = JSON.parse(response);
-      let id = content.length;
+      let id = response.length;
       return id;
     },
 
