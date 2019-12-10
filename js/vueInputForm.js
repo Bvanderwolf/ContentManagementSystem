@@ -136,11 +136,15 @@ new Vue({
     },
 
     async getNextModelIdAsync() {
-      let response = await fetch(
-        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models"
-      );
-      var json = await response.json();
-      return json ? json.length + 1 : 0;
+      try {
+        let response = await fetch(
+          "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models"
+        );
+        var json = await response.json();
+        return json.length;
+      } catch {
+        return 0;
+      }
     },
 
     //creates package usable for JBL website
