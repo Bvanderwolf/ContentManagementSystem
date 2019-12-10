@@ -85,6 +85,7 @@ new Vue({
             this.filecontent = await ToBase64(inputfile);
             this.filename = inputfile.name;
             this.fileloaded = true;
+
             this.package = this.createJSONPackageObject(
               this.filename,
               this.message.text,
@@ -131,7 +132,7 @@ new Vue({
       // Authorize
       xhttp.setRequestHeader("Authorization", "token " + accessToken);
 
-      xhttp.send(JSON.parse(JSON.stringify(requestData)));
+      xhttp.send(JSON.stringify(requestData));
 
       // Wait until response from Github is fully recieved
       xhttp.onreadystatechange = function() {
@@ -170,7 +171,7 @@ new Vue({
       obj.baseStringModel = baseStringModel;
       obj.modeltype = modelType;
       obj.price = price;
-      return JSON.stringify(obj);
+      return JSON.parse(JSON.stringify(obj));
     }
   }
 });
