@@ -133,7 +133,9 @@ new Vue({
           reader.onerror = () => reject(error);
         });
 
-      const packagecontent = await ToBase64(this.package);
+      //package jsonstring content into a blob so it can be turned into a base64 string to sent to github
+      var packagecontent = await ToBase64(new Blob([this.package], { type: "application/json" }));
+      packagecontent = packagecontent.split(",")[1];
 
       const requestData = { message: this.message.text, content: packagecontent };
 
