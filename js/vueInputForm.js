@@ -7,7 +7,7 @@ new Vue({
       features: ["Animation", "Textures", "Low Poly"],
       selection: {
         member: "0",
-        modeltype: "wearable-head",
+        modeltype: "IOS",
         features: []
       },
       message: {
@@ -15,6 +15,7 @@ new Vue({
         maxlength: 255
       },
       submitted: false,
+      price: "100$",
       filename: "",
       filecontent: "",
       fileloaded: false,
@@ -84,8 +85,8 @@ new Vue({
               this.message.text,
               "testbase64",
               this.filecontent,
-              "IOS",
-              "100 euro"
+              this.selection.modeltype,
+              this.price
             );
           }
         }
@@ -148,15 +149,11 @@ new Vue({
     },
 
     async getNextModelIdAsync() {
-      try {
-        let response = await fetch(
-          "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models"
-        );
-        var json = await response.json();
-        return json.length + 1;
-      } catch {
-        return 1;
-      }
+      let response = await fetch(
+        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models"
+      );
+      var json = await response.json();
+      return json.length + 1;
     },
 
     //creates package usable for JBL website

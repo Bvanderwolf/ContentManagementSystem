@@ -79,30 +79,20 @@
                   type="radio"
                   name="radio-1"
                   id="radio-1"
-                  value="wearable-head"
+                  value="IOS"
                   v-model="selection.modeltype"
                 />
-                <label for="radio-1">Wearable-Head</label>
+                <label for="radio-1">IOS</label>
               </li>
               <li>
                 <input
                   type="radio"
                   name="radio-2"
                   id="radio-2"
-                  value="wearable-body"
+                  value="Android"
                   v-model="selection.modeltype"
                 />
-                <label for="radio-2">Wearable-Body</label>
-              </li>
-              <li>
-                <input
-                  type="radio"
-                  name="radio-3"
-                  id="radio-3"
-                  value="placeable"
-                  v-model="selection.modeltype"
-                />
-                <label for="radio-3">PlaceAble</label>
+                <label for="radio-2">Android</label>
               </li>
             </ul>
           </div>
@@ -124,6 +114,10 @@
                 <label for="checkbox-all">Check All</label>
               </li>
             </ul>
+          </div>
+          <div>
+            <label class="label" for="input">Product Price</label>
+            <input type="text" :value="price" v-model="price" />
           </div>
           <div>
             <label class="label" for="textarea">Extra information</label>
