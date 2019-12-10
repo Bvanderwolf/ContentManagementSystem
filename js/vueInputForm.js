@@ -99,7 +99,7 @@ new Vue({
       }
 
       let id = 0;
-      let fileExtension = this.filename.split(".")[1];
+      let fileExtension = this.filename.substring(this.filename.lastIndexOf("."));
 
       id = await this.getNextModelIdAsync();
 
@@ -142,6 +142,8 @@ new Vue({
       let response = await fetch(
         "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models"
       );
+      console.log(response.length);
+      console.log(response);
       let id = response.length;
       return id;
     },
