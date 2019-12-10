@@ -121,7 +121,9 @@ new Vue({
       let id = await this.getNextModelIdAsync();
 
       const url =
-        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/model" + id;
+        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/model" +
+        id +
+        ".json";
 
       const ToBase64 = file =>
         new Promise((resolve, reject) => {
