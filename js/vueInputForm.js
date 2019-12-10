@@ -123,7 +123,17 @@ new Vue({
       const url =
         "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/model" + id;
 
-      const requestData = { message: this.message.text, content: this.package };
+      const ToBase64 = file =>
+        new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = () => reject(error);
+        });
+
+      const packagecontent = await ToBase64(this.package);
+
+      const requestData = { message: this.message.text, content: packagecontent };
 
       const xhttp = new XMLHttpRequest();
       xhttp.open("PUT", url, true);
