@@ -141,9 +141,9 @@ new Vue({
           "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models"
         );
         var json = await response.json();
-        return json.length;
+        return json.length + 1;
       } catch {
-        return 0;
+        return 1;
       }
     },
 
