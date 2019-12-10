@@ -42,18 +42,7 @@ new Vue({
       return file && acceptedImageTypes.includes(file);
     },
 
-    OnInputButtonChange: async function() {
-      //@oscar example how to use the createjsonpackageobject function
-      var json = this.CreateJSONPackageObject(
-        "titlestring",
-        "descriptionexample",
-        "basestringfotoexample",
-        "basestringmodelexample",
-        "modeltypeexample",
-        "pricestring"
-      );
-      console.log(json);
-
+    async OnInputButtonChange() {
       const input = document.querySelector('input[type="file"]');
 
       if (input.files) {
@@ -95,7 +84,7 @@ new Vue({
       Upload file to Github using the Github Content API endpoint. 
       See https://developer.github.com/v3/repos/contents/#create-or-update-a-file for info.
     */
-    submitForm: function() {
+    async submitFormAsync() {
       if (!this.fileloaded) {
         console.log("file not loaded yet");
         return;
@@ -109,11 +98,14 @@ new Vue({
         this.message.text = "added model with name " + this.filename;
       }
 
+      let id = 0;
+      let fileExtension = this.filename.split(".")[1];
+      
+      id = await this.getNextModelIdAsync();
+      
       const url =
-        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/model" +
-        this.getNextModelId().toString() +
-        "." +
-        this.filename.split(".")[1];
+        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/model" + id + "." +
+        fileExtension;
 
       const requestData = { message: this.message.text, content: this.filecontent };
 
@@ -133,7 +125,7 @@ new Vue({
     },
 
     // Get access token for Github from url
-    getGithubAccessToken: function() {
+    getGithubAccessToken() {
       const queryParams = window.location.href.replace(
         window.location.origin + "/inputForm.html?",
         ""
@@ -144,26 +136,12 @@ new Vue({
       return access_token;
     },
 
-    getNextModelId: async function() {
-      let response = await fetch(
-        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models"
-      );
+      async getNextModelIdAsync() {
+      let response = await fetch("https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models");
       let data = await response.json();
       let content = JSON.parse(response);
       let id = content.length;
       return id;
-    },
-
-    //creates package usable for JBL website
-    CreateJSONPackageObject(title, description, basestringFoto, baseStringModel, modelType, price) {
-      var obj = new Object();
-      obj.title = title;
-      obj.description = description;
-      obj.basestringFoto = basestringFoto;
-      obj.baseStringModel = baseStringModel;
-      obj.modeltype = modelType;
-      obj.price = price;
-      return JSON.parse(JSON.stringify(obj));
     }
   }
 });
