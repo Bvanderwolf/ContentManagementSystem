@@ -60,7 +60,7 @@ new Vue({
           };
 
           reader.readAsDataURL(input.files[0]);
-          
+
           // Convert content to Base64
         } else if (this.Is3DModel(input.files[0])) {
           const ToBase64 = file =>
@@ -98,7 +98,9 @@ new Vue({
 
       const url =
         "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/model" +
-        (this.getModelNamesFromGithub() + 1).toString() + "." + this.filename.split(".")[1];
+        (this.getModelNamesFromGithub() + 1).toString() +
+        "." +
+        this.filename.split(".")[1];
 
       const requestData = { message: this.message.text, content: this.filecontent };
 
@@ -112,40 +114,44 @@ new Vue({
       // Wait until response from Github is fully recieved
       xhttp.onreadystatechange = function() {
         if (xhttp.readyState === 4) {
-          window.alert("File uploaded")
+          window.alert("File uploaded");
         }
       };
     },
 
     // Get access token for Github from url
     getGithubAccessToken: function() {
-      const queryParams = window.location.href.replace(window.location.origin + "/inputForm.html?","");
+      const queryParams = window.location.href.replace(
+        window.location.origin + "/inputForm.html?",
+        ""
+      );
       var access_token = queryParams.replace("&scope=public_repo&token_type=bearer", "");
       access_token = access_token.replace("access_token=", "");
 
       return access_token;
     },
-    
+
     getModelNamesFromGithub: function() {
       try {
         const xhttp = new XMLHttpRequest();
-        const url = "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models"
-        xhttp.open("GET", url, true)
-        xhttp.send()
-    
-        var response = ""
+        const url =
+          "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models";
+        xhttp.open("GET", url, true);
+        xhttp.send();
+
+        var response = "";
 
         xhttp.onreadystatechange = function() {
           if (xhttp.readyState === 4) {
-            response = xhttp.response
-            var content = JSON.parse(response)
-            const id = content[content.length - 1].name.split("l")[1].split(".")[0]
-
-            return parseInt(id)
+            response = xhttp.response;
+            var content = JSON.parse(response);
+            Console.log(content);
+            const id = content[content.length - 1].name.split("l")[1].split(".")[0];
+            Console.log("id: " + id);
+            return parseInt(id);
           }
         };
-      }
-      catch {
+      } catch {
         return -1;
       }
     }
