@@ -140,7 +140,7 @@ new Vue({
         "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models"
       );
       var json = await response.json();
-      return json.length + 1;
+      return json ? json.length + 1 : 0;
     },
 
     //creates package usable for JBL website
