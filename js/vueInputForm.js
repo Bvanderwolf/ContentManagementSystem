@@ -44,8 +44,13 @@ new Vue({
       return file && acceptedImageTypes.includes(file);
     },
 
+    OnImageButtonChange() {
+      const input = document.querySelector(".imagereader");
+      console.log(input.files[0]);
+    },
+
     async OnInputButtonChange() {
-      const input = document.querySelector('input[type="file"]');
+      const input = document.querySelector(".filereader");
 
       if (input.files) {
         const inputfile = input.files[0];
@@ -165,7 +170,7 @@ new Vue({
       obj.baseStringModel = baseStringModel;
       obj.modeltype = modelType;
       obj.price = price;
-      return JSON.parse(JSON.stringify(obj));
+      return JSON.stringify(obj);
     }
   }
 });

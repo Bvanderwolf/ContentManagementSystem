@@ -132,6 +132,10 @@
             <span class="counter">{{ message.text.length }} / {{ message.maxlength }}</span>
           </div>
           <div>
+            <input class="imagereader" type="file" @change="OnImageButtonChange" />
+            <p>Upload your Image supported formats: .png & .jpg</p>
+          </div>
+          <div>
             <input class="filereader" type="file" @change="OnInputButtonChange" />
             <p>Upload your 3D model supported formats: .json & .usdz</p>
           </div>
