@@ -63,7 +63,7 @@ new Vue({
           this.photoloaded = true;
 
           const img = new Image();
-          img.src = reader.result;
+          img.src = photocontent;
           img.width = 100;
           img.height = 100;
 
