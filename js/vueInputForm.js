@@ -121,8 +121,8 @@ new Vue({
       const photoUrl =
         "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/placeholderImages/placeholderImage" + id + photoExtension;
 
-      await this.uploadFile(this.filecontent, accessToken, fileUrl);
-      await this.uploadFile(this.photocontent, accessToken, photoUrl);
+      await this.uploadFile(this.filecontent, accessToken, this.message.text, fileUrl);
+      await this.uploadFile(this.photocontent, accessToken, this.message.text, photoUrl);
 
       var modelMapDict = await this.getModelMap();
       var modelMap = modelMapDict.map;
@@ -144,7 +144,7 @@ new Vue({
 
       const modelMapUrl = "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/modelMap.json";
 
-      await this.uploadFile(modelMapPackaged, accessToken, modelMapUrl, modelMapDict.sha);
+      await this.uploadFile(modelMapPackaged, accessToken, this.message.text, modelMapUrl, modelMapDict.sha);
 
       this.filecontent = "";
       this.photocontent = "";
@@ -180,13 +180,12 @@ new Vue({
       return readablestring;
     },
 
-    async uploadFile(filecontent, accessToken, url, _sha = "") {
+    async uploadFile(filecontent, accessToken, _message, url, _sha = "") {
       var requestData;
       if (_sha == "") {
-        requestData = { message: this.message.text, content: filecontent };
+        requestData = { message: _message, content: filecontent };
       } else {
-        this.message.text = "updated modelmap.json";
-        requestData = { message: this.message.text, content: filecontent, sha: _sha };
+        requestData = { message: "updated modelmap.json", content: filecontent, sha: _sha };
       }
 
       const xhttp = new XMLHttpRequest();
