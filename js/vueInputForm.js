@@ -210,7 +210,7 @@ new Vue({
       console.log(requestjson);
       var modelMap = JSON.parse(content);
       console.log(modelMap);
-      return { map: modelMap, sha: request["sha"] };
+      return { map: modelMap, sha: requestjson["sha"] };
     },
 
     //creates package usable for JBL website
