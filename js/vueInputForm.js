@@ -126,8 +126,8 @@ new Vue({
         id +
         photoExtension;
 
-      await this.uploadFile(this.photocontent, accessToken, photoUrl);
       await this.uploadFile(this.filecontent, accessToken, fileUrl);
+      await this.uploadFile(this.photocontent, accessToken, photoUrl);
 
       var modelMapDict = await this.getModelMap();
       var modelMap = modelMapDict.map;
