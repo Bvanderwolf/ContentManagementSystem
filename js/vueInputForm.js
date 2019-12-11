@@ -108,7 +108,7 @@ new Vue({
       const accessToken = this.getGithubAccessToken();
 
       var modelMapDict = await this.getModelMap();
-      let id = modelMapDict.map.length + 1;
+      let id = Object.keys(modelMapDict.map).length + 1;
 
       if (this.message.text == "") {
         this.message.text = "added file with name " + this.filename;
