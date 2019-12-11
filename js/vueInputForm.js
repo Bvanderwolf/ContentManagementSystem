@@ -130,7 +130,7 @@ new Vue({
         this.createJSONPackageObject(
           this.filename,
           this.message.text,
-          "https://raw.githubusercontent.com/Bvanderwolf/bvanderwolf.github.io/master/placeholderImages" + id + photoExtension,
+          "https://raw.githubusercontent.com/Bvanderwolf/bvanderwolf.github.io/master/placeholderImages/placeholderImage" + id + photoExtension,
           "https://raw.githubusercontent.com/Bvanderwolf/bvanderwolf.github.io/master/models/model" + id + fileExtension,
           this.selection.modeltype,
           this.price
