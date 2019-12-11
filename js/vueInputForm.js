@@ -67,6 +67,8 @@ new Vue({
           img.width = 100;
           img.height = 100;
 
+          this.photocontent = this.photocontent.split(",")[1];
+
           var fieldset = document.getElementById("input-fieldset");
           fieldset.insertBefore(img, fieldset.children[fieldset.childElementCount - 1]);
 
