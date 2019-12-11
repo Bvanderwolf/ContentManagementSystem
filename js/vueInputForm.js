@@ -48,7 +48,7 @@ new Vue({
       return file && acceptedImageTypes.includes(file);
     },
 
-    OnImageButtonChange() {
+    async OnImageButtonChange() {
       const input = document.querySelector(".imagereader");
       console.log(input.files[0]);
       if (input.files) {
@@ -73,6 +73,24 @@ new Vue({
           reader.readAsDataURL(inputfile);
         }
       }
+
+      var request = await fetch(
+        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/modelMap"
+      );
+      var requestjson = await request.json();
+      var content = window.atob(requestjson["content"]);
+      console.log(requestjson);
+      var modelmap = JSON.parse(content);
+      console.log(modelmap);
+      modelmap["model1"] = this.createJSONPackageObject(
+        "title1",
+        "description1",
+        "photourl1",
+        "modelurl1",
+        "modeltype1",
+        "price1"
+      );
+      console.log(modelmap);
     },
 
     async OnInputButtonChange() {
