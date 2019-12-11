@@ -195,7 +195,7 @@ new Vue({
 
     async uploadFile(filecontent, accessToken, url, _sha = "") {
       var requestData;
-      if (sha == "") {
+      if (_sha == "") {
         requestData = { message: this.message.text, content: filecontent };
       } else {
         this.message.text = "updated modelmap.json";
