@@ -11,14 +11,18 @@ new Vue({
         features: []
       },
       message: {
-        text: `type commit message here`,
+        text: "",
+        placeholder: `type commit message here`,
         maxlength: 255
       },
       submitted: false,
-      price: "100$",
+      priceplaceholder: "100$",
+      price: "",
       filename: "",
       filecontent: "",
+      photocontent: "",
       fileloaded: false,
+      photoloaded: false,
       package: null
     };
   },
@@ -47,17 +51,16 @@ new Vue({
     OnImageButtonChange() {
       const input = document.querySelector(".imagereader");
       console.log(input.files[0]);
-    },
-
-    async OnInputButtonChange() {
-      const input = document.querySelector(".filereader");
-
       if (input.files) {
         const inputfile = input.files[0];
+
         if (this.IsFileImage(inputfile["type"])) {
           const reader = new FileReader();
 
           reader.onload = function() {
+            this.photocontent = reader.result;
+            this.photoloaded = true;
+
             const img = new Image();
             img.src = reader.result;
             img.width = 100;
@@ -68,35 +71,34 @@ new Vue({
           };
 
           reader.readAsDataURL(inputfile);
+        }
+      }
+    },
 
-          // Convert content to Base64
-        } else {
-          if (this.Is3DModel(inputfile)) {
-            console.log("file loading");
-            const ToBase64 = file =>
-              new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = () => reject(error);
-              });
+    async OnInputButtonChange() {
+      const input = document.querySelector(".filereader");
 
-            // Wait until content is processed completely
-            this.filecontent = await ToBase64(inputfile);
-            // Remove header to get valid Base64 encoded content
-            this.filecontent = this.filecontent.split(",")[1];
-            this.filename = inputfile.name;
-            this.fileloaded = true;
+      if (input.files) {
+        const inputfile = input.files[0];
 
-            this.package = this.createJSONPackageObject(
-              this.filename,
-              this.message.text,
-              "testbase64",
-              this.filecontent,
-              this.selection.modeltype,
-              this.price
-            );
-          }
+        if (this.Is3DModel(inputfile)) {
+          console.log("file loading");
+
+          // Wait until content is processed completely
+          this.filecontent = await this.getReadableURLString(inputfile);
+          // Remove header to get valid Base64 encoded content
+          this.filecontent = this.filecontent.split(",")[1];
+          this.filename = inputfile.name;
+          this.fileloaded = true;
+
+          this.package = this.createJSONPackageObject(
+            this.filename,
+            this.message.text,
+            "testbase64",
+            this.filecontent,
+            this.selection.modeltype,
+            this.price
+          );
         }
       }
     },
@@ -106,17 +108,17 @@ new Vue({
       See https://developer.github.com/v3/repos/contents/#create-or-update-a-file for info.
     */
     async submitFormAsync() {
-      if (!this.fileloaded) {
-        console.log("file not loaded yet");
+      if (!this.fileloaded || !this.photoloaded) {
+        console.log("file or photo not loaded yet");
         return;
       }
 
       const accessToken = this.getGithubAccessToken();
 
-      if (this.message.text == `type commit message here`) {
+      if (this.message.text == "") {
         this.message.text = "added model with name " + this.filename;
       }
-
+      console.log(this.photocontent);
       //let fileExtension = this.filename.substring(this.filename.lastIndexOf("."));
       let id = await this.getNextModelIdAsync();
 
@@ -125,16 +127,10 @@ new Vue({
         id +
         ".json";
 
-      const ToBase64 = file =>
-        new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = () => resolve(reader.result);
-          reader.onerror = () => reject(error);
-        });
-
       //package jsonstring content into a blob so it can be turned into a base64 string to sent to github
-      var packagecontent = await ToBase64(new Blob([this.package], { type: "application/json" }));
+      var packagecontent = await this.getReadableURLString(
+        new Blob([this.package], { type: "application/json" })
+      );
       packagecontent = packagecontent.split(",")[1];
 
       const requestData = { message: this.message.text, content: packagecontent };
@@ -145,6 +141,11 @@ new Vue({
       xhttp.setRequestHeader("Authorization", "token " + accessToken);
 
       xhttp.send(JSON.stringify(requestData));
+
+      this.filecontent = "";
+      this.photocontent = "";
+      this.fileloaded = false;
+      this.photoloaded = false;
 
       // Wait until response from Github is fully recieved
       xhttp.onreadystatechange = function() {
@@ -174,15 +175,28 @@ new Vue({
       return json.length + 1;
     },
 
+    async getReadableURLString(blob) {
+      const ToBase64 = file =>
+        new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = () => reject(error);
+        });
+
+      var readablestring = await ToBase64(blob);
+      return readablestring;
+    },
+
     //creates package usable for JBL website
     createJSONPackageObject(title, description, basestringFoto, baseStringModel, modelType, price) {
       var obj = new Object();
       obj.title = title;
       obj.description = description;
-      obj.basestringFoto = basestringFoto;
-      obj.baseStringModel = baseStringModel;
       obj.modeltype = modelType;
       obj.price = price;
+      obj.basestringFoto = basestringFoto;
+      obj.baseStringModel = baseStringModel;
       return JSON.stringify(obj);
     }
   }

@@ -117,7 +117,7 @@
           </div>
           <div>
             <label class="label" for="input">Product Price</label>
-            <input type="text" :value="price" />
+            <input type="text" :placeholder="priceplaceholder" v-model="price" />
           </div>
           <div>
             <label class="label" for="textarea">Extra information</label>
@@ -126,6 +126,7 @@
               name="textarea"
               id="textarea"
               required=""
+              :placeholder="message.placeholder"
               v-model="message.text"
               :maxlength="message.maxlength"
             ></textarea>
