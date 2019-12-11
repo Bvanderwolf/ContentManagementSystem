@@ -107,7 +107,8 @@ new Vue({
 
       const accessToken = this.getGithubAccessToken();
 
-      let id = await this.getNextModelIdAsync();
+      var modelMapDict = await this.getModelMap();
+      let id = modelMapDict.map.length + 1;
 
       if (this.message.text == "") {
         this.message.text = "added file with name " + this.filename;
@@ -124,7 +125,6 @@ new Vue({
       await this.uploadFile(this.filecontent, accessToken, this.message.text, fileUrl);
       await this.uploadFile(this.photocontent, accessToken, this.message.text, photoUrl);
 
-      var modelMapDict = await this.getModelMap();
       var modelMap = modelMapDict.map;
       modelMap["model" + id] = JSON.parse(
         this.createJSONPackageObject(
