@@ -193,12 +193,11 @@ new Vue({
       return readablestring;
     },
 
-    async uploadFile(filecontent, accessToken, url, _sha = "") {    
-      const requestData;
-      if(sha == ""){
+    async uploadFile(filecontent, accessToken, url, _sha = "") {
+      var requestData;
+      if (sha == "") {
         requestData = { message: this.message.text, content: filecontent };
-      }
-      else{
+      } else {
         this.message.text = "updated modelmap.json";
         requestData = { message: this.message.text, content: filecontent, sha: _sha };
       }
@@ -227,7 +226,7 @@ new Vue({
       console.log(requestjson);
       var modelmap = JSON.parse(content);
       console.log(modelmap);
-      return {map: modelMap, sha: request["sha"]};
+      return { map: modelMap, sha: request["sha"] };
     },
 
     //creates package usable for JBL website
