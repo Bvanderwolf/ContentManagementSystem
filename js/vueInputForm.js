@@ -19,6 +19,7 @@ new Vue({
       priceplaceholder: "100$",
       price: "",
       filename: "",
+      photoname: "",
       filecontent: "",
       photocontent: "",
       fileloaded: false,
@@ -59,6 +60,7 @@ new Vue({
 
           reader.onload = function() {
             this.photocontent = reader.result;
+            this.photoname = inputfile.name;
             this.photoloaded = true;
 
             const img = new Image();
@@ -73,26 +75,6 @@ new Vue({
           reader.readAsDataURL(inputfile);
         }
       }
-
-      var request = await fetch(
-        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/modelMap.json"
-      );
-      var requestjson = await request.json();
-      var content = window.atob(requestjson["content"]);
-      console.log(requestjson);
-      var modelmap = JSON.parse(content);
-      console.log(modelmap);
-      modelmap["model1"] = JSON.parse(
-        this.createJSONPackageObject(
-          "title1",
-          "description1",
-          "photourl1",
-          "modelurl1",
-          "modeltype1",
-          "price1"
-        )
-      );
-      console.log(modelmap);
     },
 
     async OnInputButtonChange() {
@@ -135,32 +117,41 @@ new Vue({
 
       const accessToken = this.getGithubAccessToken();
 
-      if (this.message.text == "") {
-        this.message.text = "added model with name " + this.filename;
-      }
-      console.log(this.photocontent);
-      //let fileExtension = this.filename.substring(this.filename.lastIndexOf("."));
       let id = await this.getNextModelIdAsync();
 
-      const url =
+      if (this.message.text == "") {
+        this.message.text = "added file with name " + this.filename;
+      }
+
+      let fileExtension = this.filename.substring(this.filename.lastIndexOf("."));
+      let photoExtension = this.photoname.substring(this.photoname.lastIndexOf("."));
+
+      const fileUrl =
         "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/model" +
         id +
-        ".json";
+        fileExtension;
+
+      const photoUrl =
+        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/placeholderImages/placeholderImage" +
+        id +
+        photoExtension;
 
       //package jsonstring content into a blob so it can be turned into a base64 string to sent to github
-      var packagecontent = await this.getReadableURLString(
-        new Blob([this.package], { type: "application/json" })
-      );
-      packagecontent = packagecontent.split(",")[1];
+      // var packagecontent = await this.getReadableURLString(
+      //   new Blob([this.package], { type: "application/json" })
+      // );
+      // packagecontent = packagecontent.split(",")[1];
 
-      const requestData = { message: this.message.text, content: packagecontent };
+      this.uploadFile(this.photocontent, accessToken, photoUrl);
 
-      const xhttp = new XMLHttpRequest();
-      xhttp.open("PUT", url, true);
-      // Authorize
-      xhttp.setRequestHeader("Authorization", "token " + accessToken);
+      // const requestData = { message: this.message.text, content: packagecontent };
 
-      xhttp.send(JSON.stringify(requestData));
+      // const xhttp = new XMLHttpRequest();
+      // xhttp.open("PUT", fileUrl, true);
+      // // Authorize
+      // xhttp.setRequestHeader("Authorization", "token " + accessToken);
+
+      // xhttp.send(JSON.stringify(requestData));
 
       this.filecontent = "";
       this.photocontent = "";
@@ -168,11 +159,11 @@ new Vue({
       this.photoloaded = false;
 
       // Wait until response from Github is fully recieved
-      xhttp.onreadystatechange = function() {
-        if (xhttp.readyState === 4) {
-          window.alert("File uploaded");
-        }
-      };
+      // xhttp.onreadystatechange = function() {
+      //   if (xhttp.readyState === 4) {
+      //     window.alert("File uploaded");
+      //   }
+      // };
     },
 
     // Get access token for Github from url
@@ -206,6 +197,47 @@ new Vue({
 
       var readablestring = await ToBase64(blob);
       return readablestring;
+    },
+
+    async uploadFile(filecontent, accessToken, url) {
+      const requestData = { message: this.message.text, content: filecontent };
+
+      const xhttp = new XMLHttpRequest();
+      xhttp.open("PUT", url, true);
+      // Authorize
+      xhttp.setRequestHeader("Authorization", "token " + accessToken);
+
+      xhttp.send(JSON.stringify(requestData));
+
+      // Wait until response from Github is fully recieved
+      xhttp.onreadystatechange = function() {
+        if (xhttp.readyState === 4) {
+          window.alert("File uploaded");
+        }
+      };
+    },
+
+    async getModelMap() {
+      var request = await fetch(
+        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/modelMap.json"
+      );
+      var requestjson = await request.json();
+      var content = window.atob(requestjson["content"]);
+      console.log(requestjson);
+      var modelmap = JSON.parse(content);
+      console.log(modelmap);
+      // modelmap["model1"] = JSON.parse(
+      //   this.createJSONPackageObject(
+      //     "title1",
+      //     "description1",
+      //     "photourl1",
+      //     "modelurl1",
+      //     "modeltype1",
+      //     "price1"
+      //   )
+      // );
+      // console.log(modelmap);
+      return modelmap;
     },
 
     //creates package usable for JBL website
