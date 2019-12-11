@@ -145,7 +145,7 @@ new Vue({
 
       //package jsonstring content into a blob so it can be turned into a base64 string to sent to github
       var modelMapPackaged = await this.getReadableURLString(
-        new Blob([JSON.stringify(modelmap)], { type: "application/json" })
+        new Blob([JSON.stringify(modelMap)], { type: "application/json" })
       );
       modelMapPackaged = modelMapPackaged.split(",")[1];
 
