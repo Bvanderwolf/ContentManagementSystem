@@ -116,15 +116,10 @@ new Vue({
       let fileExtension = this.filename.substring(this.filename.lastIndexOf("."));
       let photoExtension = this.photoname.substring(this.photoname.lastIndexOf("."));
 
-      const fileUrl =
-        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/model" +
-        id +
-        fileExtension;
+      const fileUrl = "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/model" + id + fileExtension;
 
       const photoUrl =
-        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/placeholderImages/placeholderImage" +
-        id +
-        photoExtension;
+        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/placeholderImages/placeholderImage" + id + photoExtension;
 
       await this.uploadFile(this.filecontent, accessToken, fileUrl);
       await this.uploadFile(this.photocontent, accessToken, photoUrl);
@@ -135,8 +130,8 @@ new Vue({
         this.createJSONPackageObject(
           this.filename,
           this.message.text,
-          photoUrl,
-          fileUrl,
+          "https://raw.githubusercontent.com/Bvanderwolf/bvanderwolf.github.io/master/placeholderImages" + id + photoExtension,
+          "https://raw.githubusercontent.com/Bvanderwolf/bvanderwolf.github.io/master/models/model" + id + fileExtension,
           this.selection.modeltype,
           this.price
         )
@@ -144,13 +139,10 @@ new Vue({
       console.log(modelMap);
 
       //package jsonstring content into a blob so it can be turned into a base64 string to sent to github
-      var modelMapPackaged = await this.getReadableURLString(
-        new Blob([JSON.stringify(modelMap)], { type: "application/json" })
-      );
+      var modelMapPackaged = await this.getReadableURLString(new Blob([JSON.stringify(modelMap)], { type: "application/json" }));
       modelMapPackaged = modelMapPackaged.split(",")[1];
 
-      const modelMapUrl =
-        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/modelMap";
+      const modelMapUrl = "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/modelMap";
 
       await this.uploadFile(modelMapPackaged, accessToken, modelMapUrl, modelMapDict.sha);
 
@@ -162,10 +154,7 @@ new Vue({
 
     // Get access token for Github from url
     getGithubAccessToken() {
-      const queryParams = window.location.href.replace(
-        window.location.origin + "/inputForm.html?",
-        ""
-      );
+      const queryParams = window.location.href.replace(window.location.origin + "/inputForm.html?", "");
       var access_token = queryParams.replace("&scope=public_repo&token_type=bearer", "");
       access_token = access_token.replace("access_token=", "");
 
@@ -173,9 +162,7 @@ new Vue({
     },
 
     async getNextModelIdAsync() {
-      let response = await fetch(
-        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models"
-      );
+      let response = await fetch("https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models");
       var json = await response.json();
       return json.length + 1;
     },
@@ -218,9 +205,7 @@ new Vue({
     },
 
     async getModelMap() {
-      var request = await fetch(
-        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/modelMap.json"
-      );
+      var request = await fetch("https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/modelMap.json");
       var requestjson = await request.json();
       var content = window.atob(requestjson["content"]);
       console.log(requestjson);
