@@ -142,7 +142,7 @@ new Vue({
       var modelMapPackaged = await this.getReadableURLString(new Blob([JSON.stringify(modelMap)], { type: "application/json" }));
       modelMapPackaged = modelMapPackaged.split(",")[1];
 
-      const modelMapUrl = "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/modelMap";
+      const modelMapUrl = "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/modelMap.json";
 
       await this.uploadFile(modelMapPackaged, accessToken, modelMapUrl, modelMapDict.sha);
 
