@@ -23,8 +23,7 @@ new Vue({
       filecontent: "",
       photocontent: "",
       fileloaded: false,
-      photoloaded: false,
-      package: null
+      photoloaded: false
     };
   },
   methods: {
@@ -92,15 +91,6 @@ new Vue({
           this.filecontent = this.filecontent.split(",")[1];
           this.filename = inputfile.name;
           this.fileloaded = true;
-
-          this.package = this.createJSONPackageObject(
-            this.filename,
-            this.message.text,
-            "testbase64",
-            this.filecontent,
-            this.selection.modeltype,
-            this.price
-          );
         }
       }
     },
@@ -136,34 +126,38 @@ new Vue({
         id +
         photoExtension;
 
+      await this.uploadFile(this.photocontent, accessToken, photoUrl);
+      await this.uploadFile(this.filecontent, accessToken, fileUrl);
+
+      var modelMapDict = await this.getModelMap();
+      var modelMap = modelMapDict.map;
+      modelMap["model" + id] = JSON.parse(
+        this.createJSONPackageObject(
+          this.filename,
+          this.message.text,
+          photoUrl,
+          fileUrl,
+          this.selection.modeltype,
+          this.price
+        )
+      );
+      console.log(modelMap);
+
       //package jsonstring content into a blob so it can be turned into a base64 string to sent to github
-      // var packagecontent = await this.getReadableURLString(
-      //   new Blob([this.package], { type: "application/json" })
-      // );
-      // packagecontent = packagecontent.split(",")[1];
+      var modelMapPackaged = await this.getReadableURLString(
+        new Blob([JSON.stringify(modelmap)], { type: "application/json" })
+      );
+      modelMapPackaged = modelMapPackaged.split(",")[1];
 
-      this.uploadFile(this.photocontent, accessToken, photoUrl);
+      const modelMapUrl =
+        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/modelMap";
 
-      // const requestData = { message: this.message.text, content: packagecontent };
-
-      // const xhttp = new XMLHttpRequest();
-      // xhttp.open("PUT", fileUrl, true);
-      // // Authorize
-      // xhttp.setRequestHeader("Authorization", "token " + accessToken);
-
-      // xhttp.send(JSON.stringify(requestData));
+      await this.uploadFile(modelMapPackaged, accessToken, modelMapUrl, modelMapDict.sha);
 
       this.filecontent = "";
       this.photocontent = "";
       this.fileloaded = false;
       this.photoloaded = false;
-
-      // Wait until response from Github is fully recieved
-      // xhttp.onreadystatechange = function() {
-      //   if (xhttp.readyState === 4) {
-      //     window.alert("File uploaded");
-      //   }
-      // };
     },
 
     // Get access token for Github from url
@@ -199,8 +193,15 @@ new Vue({
       return readablestring;
     },
 
-    async uploadFile(filecontent, accessToken, url) {
-      const requestData = { message: this.message.text, content: filecontent };
+    async uploadFile(filecontent, accessToken, url, _sha = "") {    
+      const requestData;
+      if(sha == ""){
+        requestData = { message: this.message.text, content: filecontent };
+      }
+      else{
+        this.message.text = "updated modelmap.json";
+        requestData = { message: this.message.text, content: filecontent, sha: _sha };
+      }
 
       const xhttp = new XMLHttpRequest();
       xhttp.open("PUT", url, true);
@@ -226,29 +227,18 @@ new Vue({
       console.log(requestjson);
       var modelmap = JSON.parse(content);
       console.log(modelmap);
-      // modelmap["model1"] = JSON.parse(
-      //   this.createJSONPackageObject(
-      //     "title1",
-      //     "description1",
-      //     "photourl1",
-      //     "modelurl1",
-      //     "modeltype1",
-      //     "price1"
-      //   )
-      // );
-      // console.log(modelmap);
-      return modelmap;
+      return {map: modelMap, sha: request["sha"]};
     },
 
     //creates package usable for JBL website
-    createJSONPackageObject(title, description, basestringFoto, baseStringModel, modelType, price) {
+    createJSONPackageObject(title, description, photourl, modelURL, modelType, price) {
       var obj = new Object();
       obj.title = title;
       obj.description = description;
       obj.modeltype = modelType;
       obj.price = price;
-      obj.basestringFoto = basestringFoto;
-      obj.baseStringModel = baseStringModel;
+      obj.photourl = photourl;
+      obj.modelurl = modelURL;
       return JSON.stringify(obj);
     }
   }
