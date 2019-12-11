@@ -224,7 +224,7 @@ new Vue({
       var requestjson = await request.json();
       var content = window.atob(requestjson["content"]);
       console.log(requestjson);
-      var modelmap = JSON.parse(content);
+      var modelMap = JSON.parse(content);
       console.log(modelmap);
       return { map: modelMap, sha: request["sha"] };
     },
