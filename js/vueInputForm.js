@@ -58,19 +58,17 @@ new Vue({
         if (this.IsFileImage(inputfile["type"])) {
           const reader = new FileReader();
 
-          reader.onload = function() {
-            this.photocontent = reader.result;
-            this.photoname = inputfile.name;
-            this.photoloaded = true;
+          this.photocontent = await this.getReadableURLString(inputfile);
+          this.photoname = inputfile.name;
+          this.photoloaded = true;
 
-            const img = new Image();
-            img.src = reader.result;
-            img.width = 100;
-            img.height = 100;
+          const img = new Image();
+          img.src = reader.result;
+          img.width = 100;
+          img.height = 100;
 
-            var fieldset = document.getElementById("input-fieldset");
-            fieldset.insertBefore(img, fieldset.children[fieldset.childElementCount - 1]);
-          };
+          var fieldset = document.getElementById("input-fieldset");
+          fieldset.insertBefore(img, fieldset.children[fieldset.childElementCount - 1]);
 
           reader.readAsDataURL(inputfile);
         }
