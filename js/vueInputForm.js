@@ -24,7 +24,7 @@ new Vue({
       photocontent: "",
       fileloaded: false,
       photoloaded: false,
-      repoName: "OscarHulshof/deptmodelrepository"
+      repoName: "Bvanderwolf/bvanderwolf.github.io"
     };
   },
   methods: {
