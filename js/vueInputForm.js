@@ -182,7 +182,7 @@ new Vue({
             let response = await fetch(url, {
                 method: "PUT",
                 headers: {
-                    "Authorization": "token" + accessToken,
+                    "Authorization": "token " + accessToken,
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(requestData)
