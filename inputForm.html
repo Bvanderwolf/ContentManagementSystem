@@ -75,23 +75,11 @@
 
             <ul class="vue-form-list">
               <li>
-                <input
-                  type="radio"
-                  name="radio-1"
-                  id="radio-1"
-                  value="IOS"
-                  v-model="selection.modeltype"
-                />
+                <input type="radio" name="radio-1" id="radio-1" value="IOS" v-model="selection.modeltype" />
                 <label for="radio-1">IOS</label>
               </li>
               <li>
-                <input
-                  type="radio"
-                  name="radio-2"
-                  id="radio-2"
-                  value="Android"
-                  v-model="selection.modeltype"
-                />
+                <input type="radio" name="radio-2" id="radio-2" value="Android" v-model="selection.modeltype" />
                 <label for="radio-2">Android</label>
               </li>
             </ul>
@@ -101,12 +89,7 @@
             <h4>Features</h4>
             <ul class="vue-form-list">
               <li v-for="(feature, index) in features">
-                <input
-                  type="checkbox"
-                  :value="feature"
-                  :id="'cb-feature-'+index"
-                  v-model="selection.features"
-                />
+                <input type="checkbox" :value="feature" :id="'cb-feature-'+index" v-model="selection.features" />
                 <label :for="'cb-feature-'+index">{{ feature }}</label>
               </li>
               <li>
@@ -144,6 +127,19 @@
             <input type="submit" value="Upload File" />
           </div>
         </fieldset>
+        <div class="progress">
+          <div
+            class="progress-bar"
+            role="progressbar"
+            aria-valuenow="70"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            style="margin: -20px -0px;"
+            v-bind:style="{'width': styles.progressBarWidth}"
+          >
+            {{styles.progressBarWidth}}
+          </div>
+        </div>
       </form>
     </div>
 
