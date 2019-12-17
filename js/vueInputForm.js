@@ -183,7 +183,7 @@ new Vue({
             }
 
             let response = await fetch(url, {
-                method: "POST",
+                method: "PUT",
                 headers: {
                     "Authorization": "token" + accessToken
                 },
