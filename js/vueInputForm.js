@@ -148,7 +148,7 @@ new Vue({
             const modelMapUrl = "https://api.github.com/repos/" + this.repoName + "/contents/modelMap.json";
 
             let modelMapResponse = await this.uploadFile(modelMapPackaged, accessToken, this.message.text, modelMapUrl, modelMapDict.sha);
-            if (await this.isUploaded(modelMapUrl, modelMapResponse["sha"])) {
+            if (await this.isUploaded(modelMapUrl, modelMapResponse["content"]["sha"])) {
                 this.styles.progressBarWidth = "100%"
             }
 
