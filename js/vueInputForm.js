@@ -154,11 +154,8 @@ new Vue({
 
         // Get access token for Github from url
         getGithubAccessToken() {
-            const queryParams = window.location.href.replace(window.location.origin + "/inputForm.html?", "");
-            var access_token = queryParams.replace("&scope=public_repo&token_type=bearer", "");
-            access_token = access_token.replace("access_token=", "");
-
-            return access_token;
+            const queryParams = new URLSearchParams(window.location.search);
+            return queryParams.get("access_token");
         },
 
         async getReadableURLString(blob) {
