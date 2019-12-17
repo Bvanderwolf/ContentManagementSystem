@@ -23,7 +23,8 @@ new Vue({
       filecontent: "",
       photocontent: "",
       fileloaded: false,
-      photoloaded: false
+      photoloaded: false,
+      repoName: "OscarHulshof/deptmodelrepository"
     };
   },
   methods: {
@@ -117,10 +118,9 @@ new Vue({
       let fileExtension = this.filename.substring(this.filename.lastIndexOf("."));
       let photoExtension = this.photoname.substring(this.photoname.lastIndexOf("."));
 
-      const fileUrl = "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models/model" + id + fileExtension;
+      const fileUrl = "https://api.github.com/repos/" + this.repoName + "/contents/models/model" + id + fileExtension;
 
-      const photoUrl =
-        "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/placeholderImages/placeholderImage" + id + photoExtension;
+      const photoUrl = "https://api.github.com/repos/" + this.repoName + "/contents/placeholderImages/placeholderImage" + id + photoExtension;
 
       await this.uploadFile(this.filecontent, accessToken, this.message.text, fileUrl);
       await this.uploadFile(this.photocontent, accessToken, this.message.text, photoUrl);
@@ -130,8 +130,8 @@ new Vue({
         this.createJSONPackageObject(
           this.filename,
           this.message.text,
-          "https://raw.githubusercontent.com/Bvanderwolf/bvanderwolf.github.io/master/placeholderImages/placeholderImage" + id + photoExtension,
-          "https://raw.githubusercontent.com/Bvanderwolf/bvanderwolf.github.io/master/models/model" + id + fileExtension,
+          "https://raw.githubusercontent.com/" + this.repoName + "/master/placeholderImages/placeholderImage" + id + photoExtension,
+          "https://raw.githubusercontent.com/" + this.repoName + "/master/models/model" + id + fileExtension,
           this.selection.modeltype,
           this.price
         )
@@ -142,7 +142,7 @@ new Vue({
       var modelMapPackaged = await this.getReadableURLString(new Blob([JSON.stringify(modelMap)], { type: "application/json" }));
       modelMapPackaged = modelMapPackaged.split(",")[1];
 
-      const modelMapUrl = "https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/modelMap.json";
+      const modelMapUrl = "https://api.github.com/repos/" + this.repoName + "/contents/modelMap.json";
 
       await this.uploadFile(modelMapPackaged, accessToken, this.message.text, modelMapUrl, modelMapDict.sha);
 
@@ -159,12 +159,6 @@ new Vue({
       access_token = access_token.replace("access_token=", "");
 
       return access_token;
-    },
-
-    async getNextModelIdAsync() {
-      let response = await fetch("https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/models");
-      var json = await response.json();
-      return json.length + 1;
     },
 
     async getReadableURLString(blob) {
@@ -204,7 +198,7 @@ new Vue({
     },
 
     async getModelMap() {
-      var request = await fetch("https://api.github.com/repos/bvanderwolf/bvanderwolf.github.io/contents/modelMap.json");
+      var request = await fetch("https://api.github.com/repos/" + this.repoName + "/contents/modelMap.json");
       var requestjson = await request.json();
       var content = window.atob(requestjson["content"]);
       console.log(requestjson);
