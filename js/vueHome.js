@@ -32,7 +32,8 @@ new Vue({
                 // Send request to Github for access-token
                 let response = await fetch(url, {
                     headers: {
-                        "Accept": "application/x-www-form-urlencoded"
+                        "Accept": "application/x-www-form-urlencoded",
+                        "Origin": "bvanderwolf.github.io"
                     }
                 });
                 window.location.assign(window.location.origin + "\\inputForm.html?" + response);
