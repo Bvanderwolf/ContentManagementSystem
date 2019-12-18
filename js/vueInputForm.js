@@ -267,7 +267,7 @@ new Vue({
         incrementProgressBar(amount) {
             let currentAmount = Number(this.styles.progressBarWidth.slice(0, -1));
             let newAmount = currentAmount + amount;
-            return newAmount.toString() + "%";
+            this.styles.progressBarWidth = newAmount.toString() + "%";
         }
 
         // async allUploaded(modelMapUrl, modelMapResponse, photoUrl, photoResponse, modelUrl, modelResponse) {
