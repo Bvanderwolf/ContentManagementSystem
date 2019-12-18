@@ -7,6 +7,8 @@ new Vue({
         async loginGit() {
             this.navigateToInputFormIfLoggedIn();
 
+            const voetbaltaart = "338d81491cc7f65901b4";
+
             // If a code has not been recieved from Github yet, navigate to Github login screen.
             url = "https://github.com/login/oauth/authorize?client_id=" + voetbaltaart + "&scope=public_repo";
             window.location.assign(url);
@@ -28,7 +30,11 @@ new Vue({
                     basketbaltaart;
 
                 // Send request to Github for access-token
-                let response = await fetch(url);
+                let response = await fetch(url, {
+                    headers: {
+                        "Accept": "application/x-www-form-urlencoded"
+                    }
+                });
                 window.location.assign(window.location.origin + "\\inputForm.html?" + response);
             }
         }
