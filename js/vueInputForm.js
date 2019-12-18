@@ -10,13 +10,14 @@ new Vue({
                 modeltype: "IOS",
                 features: []
             },
+            // Commit message for GitHub
             message: {
                 text: "",
                 placeholder: `type commit message here`,
                 maxlength: 255
             },
             styles: {
-                progressBarWidth: "10%"
+                progressBarWidth: "0%"
             },
             submitted: false,
             priceplaceholder: "100$",
@@ -152,16 +153,7 @@ new Vue({
             let modelMapResponse = await this.uploadFile(modelMapPackaged, accessToken, this.message.text, modelMapUrl, modelMapDict.sha);
             this.incrementProgressBar(100 / 6)
 
-            // await this.allUploaded(
-            //     modelMapUrl,
-            //     modelMapResponse,
-            //     photoUrl,
-            //     photoResponse,
-            //     modelUrl,
-            //     modelResponse
-            // )
-            await this.isModelMapUpdated(modelMapDict);
-            this.styles.progressBarWidth = "100%"
+            await this.getUploadStatus(photoUrl, modelUrl, modelMapDict)
 
             this.filecontent = "";
             this.photocontent = "";
@@ -190,12 +182,14 @@ new Vue({
 
         async uploadFile(filecontent, accessToken, _message, url, _sha = "") {
             var requestData;
+
             if (_sha == "") {
                 requestData = { message: _message, content: filecontent };
             } else {
                 requestData = { message: "updated modelmap.json", content: filecontent, sha: _sha };
             }
 
+            // Upload data to GitHub
             let response = await fetch(url, {
                 method: "PUT",
                 headers: {
@@ -230,35 +224,47 @@ new Vue({
             return JSON.stringify(obj);
         },
 
-        async isModelMapUpdated(modelMap) {
+        // Check if modelMap.json on GitHub repository is updated
+        // by comparing the old most highest id to new highest id
+        isModelMapUpdated(modelMap) {
+            // Get old id
             let oldId = Object.keys(modelMap.map).length + 1;
+            // Get new id
+            let newModelMap = await this.getModelMap();
+            let newId = Object.keys(newModelMap.map).length + 1;
 
-            let done = false;
-            while (!done) {
-                let newModelMap = await this.getModelMap();
-                let newId = Object.keys(newModelMap.map).length + 1;
+            return newId === oldId;
+        },
 
-                if (newId === oldId) {
-                    done = true;
+        doesFileExist(url) {
+            let response = await fetch(url);
+            return response.ok;
+        },
+
+        async getUploadStatus(photoUrl, modelUrl, modelMap) {
+            photoDone = false;
+            modelDone = false;
+            modelMapDone = false;
+
+            while (!photoDone || !modelDone || !modelMapDone) {
+                if (!modelMapDone && this.isModelMapUpdated(modelMap)) {
+                    modelMapDone = true
+                    this.incrementProgressBar(100 / 6)
+                }
+                if (!photoDone && this.doesFileExist(photoUrl)) {
+                    photoDone = true
+                    this.incrementProgressBar(100 / 6)
+                }
+                if (!modelDone && this.doesFileExist(modelUrl)) {
+                    modelDone = true
+                    this.incrementProgressBar(100 / 6)
                 }
 
                 await this.sleep(3000);
             }
+        }
 
-            return done;
-
-            // let response = await fetch(path);
-            // let content = await response.json();
-
-            // while (content["sha"] !== sha) {
-            //     console.log("checked: " + content["sha"] + " with " + sha);
-            //     await this.sleep(3000);
-            // }
-
-            // return true
-        },
-
-        // Sleep for given amount of milliseconds
+        // Wait for given amount of milliseconds
         sleep(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
         },
@@ -267,40 +273,13 @@ new Vue({
         incrementProgressBar(amount) {
             let currentAmount = Number(this.styles.progressBarWidth.slice(0, -1));
             let newAmount = currentAmount + amount;
+
+            // Avoid progress values above 100
             if (newAmount > 100) {
                 newAmount = 100
             }
+
             this.styles.progressBarWidth = newAmount.toString() + "%";
         }
-
-        // async allUploaded(modelMapUrl, modelMapResponse, photoUrl, photoResponse, modelUrl, modelResponse) {
-        //     let modelMapResp = await fetch(modelMapUrl);
-        //     let modelMapContent = await modelMapResp.json();
-
-        //     let photoResp = await fetch(photoUrl);
-        //     let photoContent = await photoResp.json();
-
-        //     let modelResp = await fetch(modelUrl);
-        //     let modelContent = await modelResp.json();
-
-        //     let modelMapUpdated = false
-        //     let photoUploaded = false
-        //     let modelUploaded = false
-        //     let allDone = false
-
-        //     while (!allDone) {
-        //         await this.sleep(3000)
-        //         if (modelMapUpdated || await modelMapContent["sha"] !== modelMapResponse["content"]["sha"]) {
-        //             modelMapUpdated = true
-        //         }
-        //         if (photoUploaded || await photoContent["sha"] !== photoResp["content"]["sha"]) {
-        //             modelMapUpdated = true
-        //         }
-        //         if (modelUploaded || await modelContent["sha"] !== modelResp["content"]["sha"]) {
-        //             modelMapUpdated = true
-        //         }
-        //         allDone = modelMap && photoUploaded && modelUploaded
-        //     }
-        // }
     }
 });
