@@ -226,7 +226,7 @@ new Vue({
 
         // Check if modelMap.json on GitHub repository is updated
         // by comparing the old most highest id to new highest id
-        isModelMapUpdated(modelMap) {
+        async isModelMapUpdated(modelMap) {
             // Get old id
             let oldId = Object.keys(modelMap.map).length + 1;
             // Get new id
@@ -236,7 +236,7 @@ new Vue({
             return newId === oldId;
         },
 
-        doesFileExist(url) {
+        async doesFileExist(url) {
             let response = await fetch(url);
             return response.ok;
         },
