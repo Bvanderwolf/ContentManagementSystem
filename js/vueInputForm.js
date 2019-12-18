@@ -262,7 +262,7 @@ new Vue({
 
                 await this.sleep(3000);
             }
-        }
+        },
 
         // Wait for given amount of milliseconds
         sleep(ms) {
