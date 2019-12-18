@@ -126,9 +126,9 @@ new Vue({
             const photoUrl = "https://api.github.com/repos/" + this.repoName + "/contents/placeholderImages/placeholderImage" + id + photoExtension;
 
             let modelResponse = await this.uploadFile(this.filecontent, accessToken, this.message.text, modelUrl);
-            this.progressBarWidth = "17%";
+            this.styles.progressBarWidth = "17%";
             let photoResponse = await this.uploadFile(this.photocontent, accessToken, this.message.text, photoUrl);
-            this.progressBarWidth = "33%";
+            this.styles.progressBarWidth = "33%";
 
             var modelMap = modelMapDict.map;
             modelMap["model" + id] = JSON.parse(
@@ -160,8 +160,8 @@ new Vue({
             //     modelUrl,
             //     modelResponse
             // )
-            await this.isUploaded(modelMapUrl, modelMapResponse["content"]["sha"]);
-            this.progressBarWidth = "100%"
+            await this.isModelMapUpdated(modelMapDict);
+            this.styles.progressBarWidth = "100%"
 
             this.filecontent = "";
             this.photocontent = "";
@@ -230,51 +230,67 @@ new Vue({
             return JSON.stringify(obj);
         },
 
-        async isUploaded(path, sha) {
-            let response = await fetch(path);
-            let content = await response.json();
+        async isModelMapUpdated(modelMap) {
+            let oldId = Object.keys(modelMap.map).length + 1;
 
-            while (content["sha"] !== sha) {
-                console.log("checked: " + content["sha"] + " with " + sha);
+            let done = false;
+            while (!done) {
+                let newModelMap = this.getModelMap();
+                let newId = Object.keys(newModelMap.map).length + 1;
+
+                if (newId === oldId) {
+                    done = true;
+                }
+
                 await this.sleep(3000);
             }
 
-            return true
+            return done;
+
+            // let response = await fetch(path);
+            // let content = await response.json();
+
+            // while (content["sha"] !== sha) {
+            //     console.log("checked: " + content["sha"] + " with " + sha);
+            //     await this.sleep(3000);
+            // }
+
+            // return true
         },
 
         // Sleep for given amount of milliseconds
         sleep(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
-        },
-
-        async allUploaded(modelMapUrl, modelMapResponse, photoUrl, photoResponse, modelUrl, modelResponse) {
-            let modelMapResp = await fetch(modelMapUrl);
-            let modelMapContent = await modelMapResp.json();
-
-            let photoResp = await fetch(photoUrl);
-            let photoContent = await photoResp.json();
-
-            let modelResp = await fetch(modelUrl);
-            let modelContent = await modelResp.json();
-
-            let modelMapUpdated = false
-            let photoUploaded = false
-            let modelUploaded = false
-            let allDone = false
-
-            while (!allDone) {
-                await this.sleep(3000)
-                if (modelMapUpdated || await modelMapContent["sha"] !== modelMapResponse["content"]["sha"]) {
-                    modelMapUpdated = true
-                }
-                if (photoUploaded || await photoContent["sha"] !== photoResp["content"]["sha"]) {
-                    modelMapUpdated = true
-                }
-                if (modelUploaded || await modelContent["sha"] !== modelResp["content"]["sha"]) {
-                    modelMapUpdated = true
-                }
-                allDone = modelMap && photoUploaded && modelUploaded
-            }
         }
+
+        // async allUploaded(modelMapUrl, modelMapResponse, photoUrl, photoResponse, modelUrl, modelResponse) {
+        //     let modelMapResp = await fetch(modelMapUrl);
+        //     let modelMapContent = await modelMapResp.json();
+
+        //     let photoResp = await fetch(photoUrl);
+        //     let photoContent = await photoResp.json();
+
+        //     let modelResp = await fetch(modelUrl);
+        //     let modelContent = await modelResp.json();
+
+        //     let modelMapUpdated = false
+        //     let photoUploaded = false
+        //     let modelUploaded = false
+        //     let allDone = false
+
+        //     while (!allDone) {
+        //         await this.sleep(3000)
+        //         if (modelMapUpdated || await modelMapContent["sha"] !== modelMapResponse["content"]["sha"]) {
+        //             modelMapUpdated = true
+        //         }
+        //         if (photoUploaded || await photoContent["sha"] !== photoResp["content"]["sha"]) {
+        //             modelMapUpdated = true
+        //         }
+        //         if (modelUploaded || await modelContent["sha"] !== modelResp["content"]["sha"]) {
+        //             modelMapUpdated = true
+        //         }
+        //         allDone = modelMap && photoUploaded && modelUploaded
+        //     }
+        // }
     }
 });
