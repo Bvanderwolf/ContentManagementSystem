@@ -126,9 +126,9 @@ new Vue({
             const photoUrl = "https://api.github.com/repos/" + this.repoName + "/contents/placeholderImages/placeholderImage" + id + photoExtension;
 
             let modelResponse = await this.uploadFile(this.filecontent, accessToken, this.message.text, modelUrl);
-            this.styles.progressBarWidth = "17%";
+            this.incrementProgressBar(100 / 6)
             let photoResponse = await this.uploadFile(this.photocontent, accessToken, this.message.text, photoUrl);
-            this.styles.progressBarWidth = "33%";
+            this.incrementProgressBar(100 / 6)
 
             var modelMap = modelMapDict.map;
             modelMap["model" + id] = JSON.parse(
@@ -150,7 +150,7 @@ new Vue({
             const modelMapUrl = "https://api.github.com/repos/" + this.repoName + "/contents/modelMap.json";
 
             let modelMapResponse = await this.uploadFile(modelMapPackaged, accessToken, this.message.text, modelMapUrl, modelMapDict.sha);
-            this.progressBarWidth = "50%"
+            this.incrementProgressBar(100 / 6)
 
             // await this.allUploaded(
             //     modelMapUrl,
