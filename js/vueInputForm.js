@@ -121,12 +121,14 @@ new Vue({
             let fileExtension = this.filename.substring(this.filename.lastIndexOf("."));
             let photoExtension = this.photoname.substring(this.photoname.lastIndexOf("."));
 
-            const fileUrl = "https://api.github.com/repos/" + this.repoName + "/contents/models/model" + id + fileExtension;
+            const modelUrl = "https://api.github.com/repos/" + this.repoName + "/contents/models/model" + id + fileExtension;
 
             const photoUrl = "https://api.github.com/repos/" + this.repoName + "/contents/placeholderImages/placeholderImage" + id + photoExtension;
 
-            await this.uploadFile(this.filecontent, accessToken, this.message.text, fileUrl);
-            await this.uploadFile(this.photocontent, accessToken, this.message.text, photoUrl);
+            let modelResponse = await this.uploadFile(this.filecontent, accessToken, this.message.text, modelUrl);
+            this.progressBarWidth = "17%";
+            let photoResponse = await this.uploadFile(this.photocontent, accessToken, this.message.text, photoUrl);
+            this.progressBarWidth = "33%";
 
             var modelMap = modelMapDict.map;
             modelMap["model" + id] = JSON.parse(
@@ -148,9 +150,18 @@ new Vue({
             const modelMapUrl = "https://api.github.com/repos/" + this.repoName + "/contents/modelMap.json";
 
             let modelMapResponse = await this.uploadFile(modelMapPackaged, accessToken, this.message.text, modelMapUrl, modelMapDict.sha);
-            if (await this.isUploaded(modelMapUrl, modelMapResponse["content"]["sha"])) {
-                this.styles.progressBarWidth = "100%"
-            }
+            this.progressBarWidth = "50%"
+
+            // await this.allUploaded(
+            //     modelMapUrl,
+            //     modelMapResponse,
+            //     photoUrl,
+            //     photoResponse,
+            //     modelUrl,
+            //     modelResponse
+            // )
+            await this.isUploaded(modelMapUrl, modelMapResponse["content"]["sha"]);
+            this.progressBarWidth = "100%"
 
             this.filecontent = "";
             this.photocontent = "";
@@ -224,14 +235,46 @@ new Vue({
             let content = await response.json();
 
             while (content["sha"] !== sha) {
+                console.log("checked: " + content["sha"] + " with " + sha);
                 await this.sleep(3000);
             }
 
             return true
         },
 
+        // Sleep for given amount of milliseconds
         sleep(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
+        },
+
+        async allUploaded(modelMapUrl, modelMapResponse, photoUrl, photoResponse, modelUrl, modelResponse) {
+            let modelMapResp = await fetch(modelMapUrl);
+            let modelMapContent = await modelMapResp.json();
+
+            let photoResp = await fetch(photoUrl);
+            let photoContent = await photoResp.json();
+
+            let modelResp = await fetch(modelUrl);
+            let modelContent = await modelResp.json();
+
+            let modelMapUpdated = false
+            let photoUploaded = false
+            let modelUploaded = false
+            let allDone = false
+
+            while (!allDone) {
+                await this.sleep(3000)
+                if (modelMapUpdated || await modelMapContent["sha"] !== modelMapResponse["content"]["sha"]) {
+                    modelMapUpdated = true
+                }
+                if (photoUploaded || await photoContent["sha"] !== photoResp["content"]["sha"]) {
+                    modelMapUpdated = true
+                }
+                if (modelUploaded || await modelContent["sha"] !== modelResp["content"]["sha"]) {
+                    modelMapUpdated = true
+                }
+                allDone = modelMap && photoUploaded && modelUploaded
+            }
         }
     }
 });
