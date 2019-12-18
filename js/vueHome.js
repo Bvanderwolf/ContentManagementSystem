@@ -30,13 +30,18 @@ new Vue({
                     basketbaltaart;
 
                 // Send request to Github for access-token
-                let response = await fetch(url, {
-                    headers: {
-                        "Accept": "application/x-www-form-urlencoded",
-                        "Origin": "bvanderwolf.github.io"
+                const xhttp = new XMLHttpRequest();
+                xhttp.open("GET", url, true);
+                xhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest"); // Needed for reverse proxy
+                xhttp.send();
+
+                // Wait until request is fully processed before getting the response
+                xhttp.onreadystatechange = function() {
+                    if (xhttp.readyState === 4) {
+                        // Navigate to input form, passing Github response as querystring
+                        window.location.assign(window.location.origin + "\\inputForm.html?" + xhttp.response);
                     }
-                });
-                window.location.assign(window.location.origin + "\\inputForm.html?" + response);
+                }
             }
         }
     },
