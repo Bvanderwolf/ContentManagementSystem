@@ -235,7 +235,7 @@ new Vue({
 
             let done = false;
             while (!done) {
-                let newModelMap = this.getModelMap();
+                let newModelMap = await this.getModelMap();
                 let newId = Object.keys(newModelMap.map).length + 1;
 
                 if (newId === oldId) {
