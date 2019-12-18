@@ -273,13 +273,13 @@ new Vue({
         incrementProgressBar(amount) {
             let currentAmount = Number(this.styles.progressBarWidth.slice(0, -1));
             let newAmount = currentAmount + amount;
-
+            
             // Avoid progress values above 100
             if (newAmount > 100) {
                 newAmount = 100
             }
 
-            this.styles.progressBarWidth = newAmount.toString() + "%";
+            this.styles.progressBarWidth = Math.round(newAmount).toString() + "%";
         }
     }
 });
