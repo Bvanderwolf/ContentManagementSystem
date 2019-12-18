@@ -261,6 +261,13 @@ new Vue({
         // Sleep for given amount of milliseconds
         sleep(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
+        },
+
+        // Increment progress bar by given amount
+        incrementProgressBar(amount) {
+            let currentAmount = Number(this.styles.progressBarWidth.slice(0, -1));
+            let newAmount = currentAmount + amount;
+            return newAmount.toString() + "%";
         }
 
         // async allUploaded(modelMapUrl, modelMapResponse, photoUrl, photoResponse, modelUrl, modelResponse) {
