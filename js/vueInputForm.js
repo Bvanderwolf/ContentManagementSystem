@@ -127,10 +127,9 @@ new Vue({
       const photoUrl = "https://api.github.com/repos/" + this.repoName + "/contents/placeholderImages/placeholderImage" + id + photoExtension;
 
       let modelResponse = await this.uploadFile(this.filecontent, accessToken, this.message.text, modelUrl);
-      console.log(modelResponse);
       this.incrementProgressBar(100 / 6);
+
       let photoResponse = await this.uploadFile(this.photocontent, accessToken, this.message.text, photoUrl);
-      console.log(photoResponse);
       this.incrementProgressBar(100 / 6);
 
       var modelMap = modelMapDict.map;
@@ -148,7 +147,7 @@ new Vue({
       let modelMapResponse = await this.uploadFile(modelMapPackaged, accessToken, this.message.text, modelMapUrl, modelMapDict.sha);
       this.incrementProgressBar(100 / 6);
 
-      await this.getUploadStatus(modelResponse["sha"], photoResponse["sha"], modelMapDict);
+      await this.getUploadStatus(modelResponse["content"]["sha"], photoResponse["content"]["sha"], modelMapDict);
 
       this.filecontent = "";
       this.photocontent = "";
@@ -240,7 +239,8 @@ new Vue({
       photoDone = false;
       modelDone = false;
       modelMapDone = false;
-
+      console.log(photoSha);
+      console.log(modelSha);
       const photourl = `https://api.github.com/repos/${this.repoName}/git/blobs/${photoSha}`;
       const modelurl = `https://api.github.com/repos/${this.repoName}/git/blobs/${modelSha}`;
 
