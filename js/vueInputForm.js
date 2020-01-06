@@ -146,7 +146,7 @@ new Vue({
       let modelMapResponse = await this.uploadFile(modelMapPackaged, accessToken, this.message.text, modelMapUrl, modelMapDict.sha);
       this.incrementProgressBar(100 / 6);
 
-      await this.getUploadStatus(photoUrl, modelUrl, modelMapDict);
+      await this.getUploadStatus(modelResponse["sha"], photoResponse["sha"], modelMapDict);
 
       this.filecontent = "";
       this.photocontent = "";
@@ -234,21 +234,24 @@ new Vue({
       return response.ok;
     },
 
-    async getUploadStatus(photoUrl, modelUrl, modelMap) {
+    async getUploadStatus(photoSha, modelSha, modelMap) {
       photoDone = false;
       modelDone = false;
       modelMapDone = false;
+
+      const photourl = `https://api.github.com/repos/${this.repoName}/git/blobs/${photoSha}`;
+      const modelurl = `https://api.github.com/repos/${this.repoName}/git/blobs/${modelSha}`;
 
       while (!photoDone || !modelDone || !modelMapDone) {
         if (!modelMapDone && this.isModelMapUpdated(modelMap)) {
           modelMapDone = true;
           this.incrementProgressBar(100 / 6);
         }
-        if (!photoDone && this.doesFileExist(photoUrl)) {
+        if (!photoDone && this.doesFileExist(photourl)) {
           photoDone = true;
           this.incrementProgressBar(100 / 6);
         }
-        if (!modelDone && this.doesFileExist(modelUrl)) {
+        if (!modelDone && this.doesFileExist(modelurl)) {
           modelDone = true;
           this.incrementProgressBar(100 / 6);
         }
