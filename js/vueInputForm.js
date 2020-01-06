@@ -127,8 +127,10 @@ new Vue({
       const photoUrl = "https://api.github.com/repos/" + this.repoName + "/contents/placeholderImages/placeholderImage" + id + photoExtension;
 
       let modelResponse = await this.uploadFile(this.filecontent, accessToken, this.message.text, modelUrl);
+      console.log(modelResponse);
       this.incrementProgressBar(100 / 6);
       let photoResponse = await this.uploadFile(this.photocontent, accessToken, this.message.text, photoUrl);
+      console.log(photoResponse);
       this.incrementProgressBar(100 / 6);
 
       var modelMap = modelMapDict.map;
