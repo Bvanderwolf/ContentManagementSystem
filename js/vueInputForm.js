@@ -134,7 +134,14 @@ new Vue({
 
       var modelMap = modelMapDict.map;
       modelMap["model" + id] = JSON.parse(
-        this.createJSONPackageObject(this.filename, this.message.text, photoUrl, modelUrl, this.selection.modeltype, this.price)
+        this.createJSONPackageObject(
+          this.filename,
+          this.message.text,
+          photoResponse["content"]["sha"],
+          modelResponse["content"]["sha"],
+          this.selection.modeltype,
+          this.price
+        )
       );
       console.log(modelMap);
 
@@ -207,14 +214,14 @@ new Vue({
     },
 
     //creates package usable for JBL website
-    createJSONPackageObject(title, description, photourl, modelURL, modelType, price) {
+    createJSONPackageObject(title, description, photosha, modelsha, modelType, price) {
       var obj = new Object();
       obj.title = title;
       obj.description = description;
       obj.modeltype = modelType;
       obj.price = price;
-      obj.photourl = photourl;
-      obj.modelurl = modelURL;
+      obj.photosha = photosha;
+      obj.modelsha = modelsha;
       return JSON.stringify(obj);
     },
 
