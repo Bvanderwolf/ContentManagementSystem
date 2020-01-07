@@ -138,7 +138,7 @@ new Vue({
           this.filename,
           this.message.text,
           photoResponse["content"]["sha"],
-          modelResponse["content"]["sha"],
+          "https://raw.githubusercontent.com/Bvanderwolf/bvanderwolf.github.io/master/models/model" + id + fileExtension,
           this.selection.modeltype,
           this.price
         )
