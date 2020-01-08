@@ -120,6 +120,11 @@ new Vue({
       }
 
       let fileExtension = this.filename.substring(this.filename.lastIndexOf("."));
+      if (fileExtension == ".json" && this.selection.modeltype == "IOS") {
+        this.selection.modeltype = "Android";
+      } else if (fileExtension == ".usdz" && this.selection.modeltype == "Android") {
+        this.selection.modeltype = "IOS";
+      }
       let photoExtension = this.photoname.substring(this.photoname.lastIndexOf("."));
 
       const modelUrl = "https://api.github.com/repos/" + this.repoName + "/contents/models/model" + id + fileExtension;
