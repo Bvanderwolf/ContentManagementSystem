@@ -127,8 +127,12 @@ new Vue({
       //get the token necessary for committing on github api
       const accessToken = this.getGithubAccessToken();
 
+      //increase the progressbar as it's fetching for the modelmap
+      this.styles.progressBarTextIndex = 0;
+      this.incrementProgressBar(17);
+
       //increase the progressbar after which the modelmap gets fetched
-      this.incrementProgressBar(20);
+      this.incrementProgressBar(17);
       var modelMapDict = await this.getModelMap();
 
       //id for our new submittion is based on the key count of the modelmap json file
@@ -153,11 +157,11 @@ new Vue({
       const photoUrl = "https://api.github.com/repos/" + this.repoName + "/contents/placeholderImages/placeholderImage" + id + photoExtension;
 
       //after increasing our progressbar by another 20% we upload the model and wait for its response
-      this.incrementProgressBar(20);
+      this.incrementProgressBar(17);
       let modelResponse = await this.uploadFile(this.filecontent, accessToken, this.message.text, modelUrl);
 
       //after increasing our progressbar by another 20% we upload the placeholderImage and wait for its response
-      this.incrementProgressBar(20);
+      this.incrementProgressBar(17);
       let photoResponse = await this.uploadFile(this.photocontent, accessToken, this.message.text, photoUrl);
 
       //we add a new entry to the modelmap using all the info gained from the form and fetches from the github api
@@ -180,12 +184,12 @@ new Vue({
       const modelMapUrl = "https://api.github.com/repos/" + this.repoName + "/contents/modelMap.json";
 
       //after increasing our progressbar by another 20% we upload the new modelMap and wait for its response
-      this.incrementProgressBar(20);
+      this.incrementProgressBar(17);
       let modelMapResponse = await this.uploadFile(modelMapPackaged, accessToken, this.message.text, modelMapUrl, modelMapDict.sha);
 
       //after increasing our progressbar by another 20% we start waiting for our
       //modelMap, placeholderImage and model to be updated live on the github Api so they can be fetched by the JBL demo website
-      this.incrementProgressBar(20);
+      this.incrementProgressBar(15);
       await this.getUploadStatus(modelResponse["content"]["sha"], photoResponse["content"]["sha"], modelMapDict);
 
       //reset all form attribute values and finish up by incrementing the progressbar one last time
