@@ -127,8 +127,7 @@
             <input type="submit" value="Upload File" />
           </div>
         </fieldset>
-        <div class="progress" style= "color: black; font-style: oblique; font-weight: 500;">
-            {{styles.progressBarText}}
+        <div class="progress">
           <div
             class="progress-bar"
             role="progressbar"
@@ -137,8 +136,10 @@
             aria-valuemax="100"
             style="margin: -20px -0px;"
             v-bind:style="{'width': styles.progressBarWidth}"
-          >
-
+          > 
+          <div class="progressText" style= "color: black; font-style: oblique; font-weight: 500;">
+              {{styles.progressBarText}}
+            </div> 
           </div>
         </div>
       </form>
