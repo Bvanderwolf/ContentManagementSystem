@@ -112,17 +112,13 @@ new Vue({
       }
     },
 
-    /*
-              Upload file to Github using the Github Content API endpoint. 
-              See https://developer.github.com/v3/repos/contents/#create-or-update-a-file for info.
-            */
     async submitFormAsync() {
       if (!this.fileloaded || !this.photoloaded) {
         console.log(`file: ${this.fileloaded} / photo: ${this.photoloaded} not loaded yet`);
         return;
       }
 
-      this.progressBarText = this.progressBarTexts[this.progressBarTextIndex];
+      this.styles.progressBarText = this.styles.progressBarTexts[this.styles.progressBarTextIndex];
 
       const accessToken = this.getGithubAccessToken();
 
@@ -304,9 +300,9 @@ new Vue({
         newAmount = 100;
       }
 
-      this.progressBarTextIndex++;
+      this.styles.progressBarTextIndex++;
       this.styles.progressBarWidth = Math.round(newAmount).toString() + "%";
-      this.progressBarText = `${this.progressBarWidth} (${this.progressBarTexts[this.progressBarTextIndex]})`;
+      this.styles.progressBarText = `${this.styles.progressBarWidth} (${this.styles.progressBarTexts[this.styles.progressBarTextIndex]})`;
     }
   }
 });
