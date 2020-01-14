@@ -21,7 +21,6 @@ new Vue({
         progressBarText: "",
         progressBarTextIndex: 0,
         progressBarTexts: [
-          "Feeling Sleepy",
           "getting model map",
           "uploading model",
           "uploading placeholderImage",
