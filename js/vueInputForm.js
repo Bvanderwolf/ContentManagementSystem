@@ -70,6 +70,15 @@ new Vue({
       if (input.files) {
         const inputfile = input.files[0];
 
+        var fieldset = document.getElementById("input-fieldset");
+        var images = document.getElementsByTagName('img').length;
+
+        if (images >= 1) {
+          // fieldset.getElementsByTagName('img').remove();
+          $("img").remove();
+          images = document.getElementsByTagName('img').length;
+        }
+
         if (this.IsFileImage(inputfile["type"])) {
           const reader = new FileReader();
 
@@ -84,7 +93,6 @@ new Vue({
 
           this.photocontent = this.photocontent.split(",")[1];
 
-          var fieldset = document.getElementById("input-fieldset");
           fieldset.insertBefore(img, fieldset.children[fieldset.childElementCount - 1]);
 
           reader.readAsDataURL(inputfile);
