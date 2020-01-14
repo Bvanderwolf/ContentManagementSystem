@@ -51,13 +51,13 @@ new Vue({
     checkAll: function(event) {
       this.selection.features = event.target.checked ? this.features : [];
     },
-
+    //returns whether the file conforms to a set of file extensions related to models
     Is3DModel: function(file) {
       const accepted3DModelTypes = [".json", ".usdz", ".reality"];
       const name = file.name;
       return accepted3DModelTypes.includes(name.substring(name.lastIndexOf(".")));
     },
-
+    //returns whether the file conforms to a set of file extensions related to images
     IsFileImage: function(file) {
       const acceptedImageTypes = ["image/gif", "image/jpeg", "image/png"];
 
@@ -66,7 +66,8 @@ new Vue({
 
     async OnImageButtonChange() {
       const input = document.querySelector(".imagereader");
-
+      //if there are input files we check whether the first is an image, if so
+      //we convert it to a base64 string to show and store it
       if (input.files) {
         const inputfile = input.files[0];
 
@@ -94,7 +95,8 @@ new Vue({
 
     async OnInputButtonChange() {
       const input = document.querySelector(".filereader");
-
+      //if there are input files we check if the first one is a model, if so
+      //we convert it to a base64 string which we can store for submittion of the form
       if (input.files) {
         const inputfile = input.files[0];
 
@@ -117,17 +119,25 @@ new Vue({
         return;
       }
 
+      //if the progressbar was already 100% we reset its value back to 0%
+      if (this.styles.progressBarWidth == "100%") this.styles.progressBarWidth = "0%";
+
+      //get the token necessary for committing on github api
       const accessToken = this.getGithubAccessToken();
 
+      //increase the progressbar after which the modelmap gets fetched
       this.incrementProgressBar(20);
       var modelMapDict = await this.getModelMap();
 
+      //id for our new submittion is based on the key count of the modelmap json file
       let id = Object.keys(modelMapDict.map).length;
 
+      //if there is no message written we set a default message
       if (this.message.text == "") {
         this.message.text = "added file with name " + this.filename;
       }
 
+      //we make sure that the file extension of the model correctly corresponds to the modelType attribute in the form
       let fileExtension = this.filename.substring(this.filename.lastIndexOf("."));
       if (fileExtension == ".json" && this.selection.modeltype == "IOS") {
         this.selection.modeltype = "Android";
@@ -140,12 +150,15 @@ new Vue({
 
       const photoUrl = "https://api.github.com/repos/" + this.repoName + "/contents/placeholderImages/placeholderImage" + id + photoExtension;
 
+      //after increasing our progressbar by another 20% we upload the model and wait for its response
       this.incrementProgressBar(20);
       let modelResponse = await this.uploadFile(this.filecontent, accessToken, this.message.text, modelUrl);
 
+      //after increasing our progressbar by another 20% we upload the placeholderImage and wait for its response
       this.incrementProgressBar(20);
       let photoResponse = await this.uploadFile(this.photocontent, accessToken, this.message.text, photoUrl);
 
+      //we add a new entry to the modelmap using all the info gained from the form and fetches from the github api
       var modelMap = modelMapDict.map;
       modelMap["model" + id] = JSON.parse(
         this.createJSONPackageObject(
@@ -164,17 +177,23 @@ new Vue({
 
       const modelMapUrl = "https://api.github.com/repos/" + this.repoName + "/contents/modelMap.json";
 
+      //after increasing our progressbar by another 20% we upload the new modelMap and wait for its response
       this.incrementProgressBar(20);
       let modelMapResponse = await this.uploadFile(modelMapPackaged, accessToken, this.message.text, modelMapUrl, modelMapDict.sha);
 
+      //after increasing our progressbar by another 20% we start waiting for our
+      //modelMap, placeholderImage and model to be updated live on the github Api so they can be fetched by the JBL demo website
       this.incrementProgressBar(20);
       await this.getUploadStatus(modelResponse["content"]["sha"], photoResponse["content"]["sha"], modelMapDict);
 
+      //reset all form attribute values and finish up by incrementing the progressbar one last time
       this.filecontent = "";
       this.photocontent = "";
       this.fileloaded = false;
       this.photoloaded = false;
+
       this.incrementProgressBar(0);
+      this.styles.progressBarTextIndex = 0;
     },
 
     // Get access token for Github from url
@@ -251,18 +270,17 @@ new Vue({
 
       return newId === oldId;
     },
-
+    //returns whether a given url gives a valid response
     async doesFileExist(url) {
       let response = await fetch(url);
       return response.ok;
     },
-
+    //checks whether photo, model and model map are uploaded or not by checking with intervals of 3 seconds
     async getUploadStatus(photoSha, modelSha, modelMap) {
       photoDone = false;
       modelDone = false;
       modelMapDone = false;
-      console.log(photoSha);
-      console.log(modelSha);
+
       const photourl = `https://api.github.com/repos/${this.repoName}/git/blobs/${photoSha}`;
       const modelurl = `https://api.github.com/repos/${this.repoName}/git/blobs/${modelSha}`;
 
