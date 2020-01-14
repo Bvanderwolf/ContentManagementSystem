@@ -196,8 +196,6 @@ new Vue({
       this.photocontent = "";
       this.fileloaded = false;
       this.photoloaded = false;
-
-      this.incrementProgressBar(0);
     },
 
     // Get access token for Github from url
