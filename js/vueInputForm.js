@@ -128,7 +128,6 @@ new Vue({
       const accessToken = this.getGithubAccessToken();
 
       //increase the progressbar as it's fetching for the modelmap
-      this.styles.progressBarTextIndex = 0;
       this.incrementProgressBar(17);
 
       //increase the progressbar after which the modelmap gets fetched
