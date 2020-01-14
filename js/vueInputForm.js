@@ -17,7 +17,7 @@ new Vue({
         maxlength: 255
       },
       styles: {
-        progressBarWidth: "0%",
+        progressBarWidth: "0",
         progressBarText: "",
         progressBarTextIndex: 0,
         progressBarTexts: [
