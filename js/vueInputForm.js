@@ -119,7 +119,10 @@ new Vue({
       }
 
       //if the progressbar was already 100% we reset its value back to 0%
-      if (this.styles.progressBarWidth == "100%") this.styles.progressBarWidth = "0%";
+      if (this.styles.progressBarWidth == "100%") {
+        this.styles.progressBarWidth = "0%";
+        this.styles.progressBarTextIndex = 0;
+      }
 
       //get the token necessary for committing on github api
       const accessToken = this.getGithubAccessToken();
@@ -192,7 +195,6 @@ new Vue({
       this.photoloaded = false;
 
       this.incrementProgressBar(0);
-      this.styles.progressBarTextIndex = 0;
     },
 
     // Get access token for Github from url
