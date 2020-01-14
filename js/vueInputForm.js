@@ -19,7 +19,7 @@ new Vue({
       styles: {
         progressBarWidth: "0%",
         progressBarText: "",
-        progressBarTextIndex: 0,
+        progressBarTextIndex: -1,
         progressBarTexts: [
           "getting model map",
           "uploading model",
@@ -121,7 +121,7 @@ new Vue({
       //if the progressbar was already 100% we reset its value back to 0%
       if (this.styles.progressBarWidth == "100%") {
         this.styles.progressBarWidth = "0%";
-        this.styles.progressBarTextIndex = 0;
+        this.styles.progressBarTextIndex = -1;
       }
 
       //get the token necessary for committing on github api
