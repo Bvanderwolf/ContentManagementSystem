@@ -66,7 +66,7 @@ new Vue({
 
     async OnImageButtonChange() {
       const input = document.querySelector(".imagereader");
-      console.log(input.files[0]);
+
       if (input.files) {
         const inputfile = input.files[0];
 
@@ -157,7 +157,6 @@ new Vue({
           this.price
         )
       );
-      console.log(modelMap);
 
       //package jsonstring content into a blob so it can be turned into a base64 string to sent to github
       var modelMapPackaged = await this.getReadableURLString(new Blob([JSON.stringify(modelMap)], { type: "application/json" }));
