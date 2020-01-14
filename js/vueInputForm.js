@@ -26,7 +26,7 @@ new Vue({
           "uploading model",
           "uploading placeholderImage",
           "sending new model map",
-          "looking github api update",
+          "looking for github api update",
           "Done!"
         ]
       },
@@ -66,7 +66,7 @@ new Vue({
 
     async OnImageButtonChange() {
       const input = document.querySelector(".imagereader");
-      console.log(input.files[0]);
+
       if (input.files) {
         const inputfile = input.files[0];
 
@@ -117,12 +117,11 @@ new Vue({
         return;
       }
 
-      this.styles.progressBarText = this.styles.progressBarTexts[this.styles.progressBarTextIndex];
-
       const accessToken = this.getGithubAccessToken();
 
-      var modelMapDict = await this.getModelMap();
       this.incrementProgressBar(20);
+      var modelMapDict = await this.getModelMap();
+
       let id = Object.keys(modelMapDict.map).length;
 
       if (this.message.text == "") {
@@ -141,11 +140,11 @@ new Vue({
 
       const photoUrl = "https://api.github.com/repos/" + this.repoName + "/contents/placeholderImages/placeholderImage" + id + photoExtension;
 
+      this.incrementProgressBar(20);
       let modelResponse = await this.uploadFile(this.filecontent, accessToken, this.message.text, modelUrl);
-      this.incrementProgressBar(20);
 
-      let photoResponse = await this.uploadFile(this.photocontent, accessToken, this.message.text, photoUrl);
       this.incrementProgressBar(20);
+      let photoResponse = await this.uploadFile(this.photocontent, accessToken, this.message.text, photoUrl);
 
       var modelMap = modelMapDict.map;
       modelMap["model" + id] = JSON.parse(
@@ -158,7 +157,6 @@ new Vue({
           this.price
         )
       );
-      console.log(modelMap);
 
       //package jsonstring content into a blob so it can be turned into a base64 string to sent to github
       var modelMapPackaged = await this.getReadableURLString(new Blob([JSON.stringify(modelMap)], { type: "application/json" }));
@@ -166,9 +164,10 @@ new Vue({
 
       const modelMapUrl = "https://api.github.com/repos/" + this.repoName + "/contents/modelMap.json";
 
-      let modelMapResponse = await this.uploadFile(modelMapPackaged, accessToken, this.message.text, modelMapUrl, modelMapDict.sha);
       this.incrementProgressBar(20);
+      let modelMapResponse = await this.uploadFile(modelMapPackaged, accessToken, this.message.text, modelMapUrl, modelMapDict.sha);
 
+      this.incrementProgressBar(20);
       await this.getUploadStatus(modelResponse["content"]["sha"], photoResponse["content"]["sha"], modelMapDict);
 
       this.filecontent = "";
@@ -280,7 +279,6 @@ new Vue({
 
         await this.sleep(3000);
       }
-      this.incrementProgressBar(20);
     },
 
     // Wait for given amount of milliseconds
