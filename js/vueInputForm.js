@@ -17,7 +17,19 @@ new Vue({
         maxlength: 255
       },
       styles: {
-        progressBarWidth: "0%"
+        progressBarWidth: "0%",
+        progressBarText: "",
+        progressBarTextIndex: 0,
+        progressBarTexts: [
+          "Feeling Sleepy",
+          "getting model map",
+          "uploading model",
+          "uploading placeholderImage",
+          "sending new model map",
+          "looking for model map update",
+          "looking for placeholderImage update",
+          "looking for model update"
+        ]
       },
       submitted: false,
       priceplaceholder: "100$",
@@ -110,9 +122,12 @@ new Vue({
         return;
       }
 
+      this.progressBarText = this.progressBarTexts[this.progressBarTextIndex];
+
       const accessToken = this.getGithubAccessToken();
 
       var modelMapDict = await this.getModelMap();
+      this.incrementProgressBar(100 / 7);
       let id = Object.keys(modelMapDict.map).length;
 
       if (this.message.text == "") {
@@ -132,10 +147,10 @@ new Vue({
       const photoUrl = "https://api.github.com/repos/" + this.repoName + "/contents/placeholderImages/placeholderImage" + id + photoExtension;
 
       let modelResponse = await this.uploadFile(this.filecontent, accessToken, this.message.text, modelUrl);
-      this.incrementProgressBar(100 / 6);
+      this.incrementProgressBar(100 / 7);
 
       let photoResponse = await this.uploadFile(this.photocontent, accessToken, this.message.text, photoUrl);
-      this.incrementProgressBar(100 / 6);
+      this.incrementProgressBar(100 / 7);
 
       var modelMap = modelMapDict.map;
       modelMap["model" + id] = JSON.parse(
@@ -157,7 +172,7 @@ new Vue({
       const modelMapUrl = "https://api.github.com/repos/" + this.repoName + "/contents/modelMap.json";
 
       let modelMapResponse = await this.uploadFile(modelMapPackaged, accessToken, this.message.text, modelMapUrl, modelMapDict.sha);
-      this.incrementProgressBar(100 / 6);
+      this.incrementProgressBar(100 / 7);
 
       await this.getUploadStatus(modelResponse["content"]["sha"], photoResponse["content"]["sha"], modelMapDict);
 
@@ -259,15 +274,15 @@ new Vue({
       while (!photoDone || !modelDone || !modelMapDone) {
         if (!modelMapDone && this.isModelMapUpdated(modelMap)) {
           modelMapDone = true;
-          this.incrementProgressBar(100 / 6);
+          this.incrementProgressBar(100 / 7);
         }
         if (!photoDone && this.doesFileExist(photourl)) {
           photoDone = true;
-          this.incrementProgressBar(100 / 6);
+          this.incrementProgressBar(100 / 7);
         }
         if (!modelDone && this.doesFileExist(modelurl)) {
           modelDone = true;
-          this.incrementProgressBar(100 / 6);
+          this.incrementProgressBar(100 / 7);
         }
 
         await this.sleep(3000);
@@ -289,7 +304,9 @@ new Vue({
         newAmount = 100;
       }
 
+      this.progressBarTextIndex++;
       this.styles.progressBarWidth = Math.round(newAmount).toString() + "%";
+      this.progressBarText = `${this.progressBarWidth} (${this.progressBarTexts[this.progressBarTextIndex]})`;
     }
   }
 });
