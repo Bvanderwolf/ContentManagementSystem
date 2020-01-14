@@ -17,7 +17,7 @@ new Vue({
         maxlength: 255
       },
       styles: {
-        progressBarWidth: "0",
+        progressBarWidth: "0%",
         progressBarText: "",
         progressBarTextIndex: 0,
         progressBarTexts: [
@@ -53,7 +53,7 @@ new Vue({
     },
 
     Is3DModel: function(file) {
-      const accepted3DModelTypes = [".json", ".usdz"];
+      const accepted3DModelTypes = [".json", ".usdz", ".reality"];
       const name = file.name;
       return accepted3DModelTypes.includes(name.substring(name.lastIndexOf(".")));
     },
@@ -132,7 +132,7 @@ new Vue({
       let fileExtension = this.filename.substring(this.filename.lastIndexOf("."));
       if (fileExtension == ".json" && this.selection.modeltype == "IOS") {
         this.selection.modeltype = "Android";
-      } else if (fileExtension == ".usdz" && this.selection.modeltype == "Android") {
+      } else if ((fileExtension == ".usdz" || fileExtension == ".reality") && this.selection.modeltype == "Android") {
         this.selection.modeltype = "IOS";
       }
       let photoExtension = this.photoname.substring(this.photoname.lastIndexOf("."));
@@ -290,7 +290,7 @@ new Vue({
 
     // Increment progress bar by given amount
     incrementProgressBar(amount) {
-      let currentAmount = Number(this.styles.progressBarWidth);
+      let currentAmount = Number(this.styles.progressBarWidth.slice(0, -1));
       let newAmount = currentAmount + amount;
 
       // Avoid progress values above 100
