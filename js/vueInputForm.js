@@ -171,10 +171,13 @@ new Vue({
       this.incrementProgressBar(17);
       let modelResponse = await this.uploadFile(this.filecontent, accessToken, this.message.text, modelUrl);
 
+
+      
       // set an error message if the user fails to upload.
-      if (modelResponse === null) {
+      if (modelResponse["message"] === "Not Found" ) {
         this.styles.progressBarText = "failed to upload model :: due to unauthorized access";
         this.styles.progressBarColor = "#ed0707";
+        this.styles.progressBarWidth = "100%";
         return;
       }
       //after increasing our progressbar by another 20% we upload the placeholderImage and wait for its response
