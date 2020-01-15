@@ -78,7 +78,7 @@ new Vue({
         // check if there is already images uploaded, if so. 
         // it will remove the older elements with the img tag.
         if (images >= 1) {
-          $("img").remove();
+          $("#preview-image").remove();
         }
 
         if (this.IsFileImage(inputfile["type"])) {
@@ -95,7 +95,9 @@ new Vue({
 
           this.photocontent = this.photocontent.split(",")[1];
 
-          fieldset.insertBefore(img, fieldset.children[fieldset.childElementCount - 1]);
+          // we insert the image into the fieldset, 2 positions from the bottom
+          // and give it the id preview-image
+          fieldset.insertBefore(img, fieldset.children[fieldset.childElementCount - 2]).setAttribute("id", "preview-image");
 
           reader.readAsDataURL(inputfile);
         }
