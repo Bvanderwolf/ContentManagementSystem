@@ -20,6 +20,7 @@ new Vue({
         progressBarWidth: "0%",
         progressBarText: "",
         progressBarTextIndex: -1,
+        progressBarColor: "#2c3e50",
         progressBarTexts: [
           "getting model map",
           "uploading model",
@@ -67,16 +68,17 @@ new Vue({
       const input = document.querySelector(".imagereader");
       //if there are input files we check whether the first is an image, if so
       //we convert it to a base64 string to show and store it
+
       if (input.files) {
         const inputfile = input.files[0];
 
         var fieldset = document.getElementById("input-fieldset");
         var images = document.getElementsByTagName('img').length;
 
+        // check if there is already images uploaded, if so. 
+        // it will remove the older elements with the img tag.
         if (images >= 1) {
-          // fieldset.getElementsByTagName('img').remove();
           $("img").remove();
-          images = document.getElementsByTagName('img').length;
         }
 
         if (this.IsFileImage(inputfile["type"])) {
@@ -167,6 +169,12 @@ new Vue({
       this.incrementProgressBar(17);
       let modelResponse = await this.uploadFile(this.filecontent, accessToken, this.message.text, modelUrl);
 
+      // set an error message if the user fails to upload.
+      if (modelResponse === null) {
+        this.styles.progressBarText = "failed to upload model :: due to unauthorized access";
+        this.styles.progressBarColor = "#ed0707";
+        return;
+      }
       //after increasing our progressbar by another 20% we upload the placeholderImage and wait for its response
       this.incrementProgressBar(17);
       let photoResponse = await this.uploadFile(this.photocontent, accessToken, this.message.text, photoUrl);
@@ -192,7 +200,7 @@ new Vue({
 
       //after increasing our progressbar by another 20% we upload the new modelMap and wait for its response
       this.incrementProgressBar(17);
-      let modelMapResponse = await this.uploadFile(modelMapPackaged, accessToken, this.message.text, modelMapUrl, modelMapDict.sha);
+      await this.uploadFile(modelMapPackaged, accessToken, this.message.text, modelMapUrl, modelMapDict.sha);
 
       //after increasing our progressbar by another 20% we start waiting for our
       //modelMap, placeholderImage and model to be updated live on the github Api so they can be fetched by the JBL demo website
