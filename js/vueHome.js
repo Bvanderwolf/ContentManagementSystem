@@ -15,7 +15,7 @@ new Vue({
     },
 
     async navigateToInputFormIfLoggedIn() {
-      let queryParams = new URLSearchParams(window.location.search);
+      const queryParams = new URLSearchParams(window.location.search);
       if (!queryParams.has("code")) return;
 
       const code = queryParams.get("code");

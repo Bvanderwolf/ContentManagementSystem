@@ -266,13 +266,13 @@ new Vue({
     //creates package usable for JBL website
     createJSONPackageObject(_title, _description, _photosha, _modelurl, _modelType, _price) {
       const obj = {
-        title = _title,
-        description = _description,
-        modeltype = _modelType,
-        price = _price,
-        photosha = _photosha,
-        modelurl = _modelurl
-      }
+        title: _title,
+        description: _description,
+        modeltype: _modelType,
+        price: _price,
+        photosha: _photosha,
+        modelurl: _modelurl
+      };
       return JSON.stringify(obj);
     },
 
