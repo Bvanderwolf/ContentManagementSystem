@@ -72,10 +72,10 @@ new Vue({
       if (input.files) {
         const inputfile = input.files[0];
 
-        var fieldset = document.getElementById("input-fieldset");
-        var images = document.getElementsByTagName('img').length;
+        const fieldset = document.getElementById("input-fieldset");
+        const images = document.getElementsByTagName("img").length;
 
-        // check if there is already images uploaded, if so. 
+        // check if there is already images uploaded, if so.
         // it will remove the older elements with the img tag.
         if (images >= 1) {
           $("#preview-image").remove();
@@ -144,10 +144,10 @@ new Vue({
 
       //increase the progressbar after which the modelmap gets fetched
       this.incrementProgressBar(17);
-      var modelMapDict = await this.getModelMap();
+      const modelMapDict = await this.getModelMap();
 
       //id for our new submittion is based on the key count of the modelmap json file
-      let id = Object.keys(modelMapDict.map).length;
+      const id = Object.keys(modelMapDict.map).length;
 
       //if there is no message written we set a default message
       if (this.message.text == "") {
@@ -155,13 +155,13 @@ new Vue({
       }
 
       //we make sure that the file extension of the model correctly corresponds to the modelType attribute in the form
-      let fileExtension = this.filename.substring(this.filename.lastIndexOf("."));
+      const fileExtension = this.filename.substring(this.filename.lastIndexOf("."));
       if (fileExtension == ".json" && this.selection.modeltype == "IOS") {
         this.selection.modeltype = "Android";
       } else if ((fileExtension == ".usdz" || fileExtension == ".reality") && this.selection.modeltype == "Android") {
         this.selection.modeltype = "IOS";
       }
-      let photoExtension = this.photoname.substring(this.photoname.lastIndexOf("."));
+      const photoExtension = this.photoname.substring(this.photoname.lastIndexOf("."));
 
       const modelUrl = "https://api.github.com/repos/" + this.repoName + "/contents/models/model" + id + fileExtension;
 
@@ -169,12 +169,10 @@ new Vue({
 
       //after increasing our progressbar by another 20% we upload the model and wait for its response
       this.incrementProgressBar(17);
-      let modelResponse = await this.uploadFile(this.filecontent, accessToken, this.message.text, modelUrl);
+      const modelResponse = await this.uploadFile(this.filecontent, accessToken, this.message.text, modelUrl);
 
-
-      
       // set an error message if the user fails to upload.
-      if (modelResponse["message"] === "Not Found" ) {
+      if (modelResponse["message"] === "Not Found") {
         this.styles.progressBarText = "failed to upload model :: due to unauthorized access";
         this.styles.progressBarColor = "#ed0707";
         this.styles.progressBarWidth = "100%";
@@ -182,10 +180,10 @@ new Vue({
       }
       //after increasing our progressbar by another 20% we upload the placeholderImage and wait for its response
       this.incrementProgressBar(17);
-      let photoResponse = await this.uploadFile(this.photocontent, accessToken, this.message.text, photoUrl);
+      const photoResponse = await this.uploadFile(this.photocontent, accessToken, this.message.text, photoUrl);
 
       //we add a new entry to the modelmap using all the info gained from the form and fetches from the github api
-      var modelMap = modelMapDict.map;
+      let modelMap = modelMapDict.map;
       modelMap["model" + id] = JSON.parse(
         this.createJSONPackageObject(
           this.filename,
@@ -198,7 +196,7 @@ new Vue({
       );
 
       //package jsonstring content into a blob so it can be turned into a base64 string to sent to github
-      var modelMapPackaged = await this.getReadableURLString(new Blob([JSON.stringify(modelMap)], { type: "application/json" }));
+      let modelMapPackaged = await this.getReadableURLString(new Blob([JSON.stringify(modelMap)], { type: "application/json" }));
       modelMapPackaged = modelMapPackaged.split(",")[1];
 
       const modelMapUrl = "https://api.github.com/repos/" + this.repoName + "/contents/modelMap.json";
@@ -234,21 +232,16 @@ new Vue({
           reader.onerror = () => reject(error);
         });
 
-      var readablestring = await ToBase64(blob);
+      const readablestring = await ToBase64(blob);
       return readablestring;
     },
 
     async uploadFile(filecontent, accessToken, _message, url, _sha = "") {
-      var requestData;
-
-      if (_sha == "") {
-        requestData = { message: _message, content: filecontent };
-      } else {
-        requestData = { message: "updated modelmap.json", content: filecontent, sha: _sha };
-      }
+      const requestData =
+        _sha == "" ? { message: _message, content: filecontent } : { message: "updated modelmap.json", content: filecontent, sha: _sha };
 
       // Upload data to GitHub
-      let response = await fetch(url, {
+      const response = await fetch(url, {
         method: "PUT",
         headers: {
           Authorization: "token " + accessToken,
@@ -261,24 +254,25 @@ new Vue({
     },
 
     async getModelMap() {
-      var request = await fetch("https://api.github.com/repos/" + this.repoName + "/contents/modelMap.json");
-      var requestjson = await request.json();
-      var content = window.atob(requestjson["content"]);
+      const request = await fetch("https://api.github.com/repos/" + this.repoName + "/contents/modelMap.json");
+      const requestjson = await request.json();
+      const content = window.atob(requestjson["content"]);
       console.log(requestjson);
-      var modelMap = JSON.parse(content);
+      const modelMap = JSON.parse(content);
       console.log(modelMap);
       return { map: modelMap, sha: requestjson["sha"] };
     },
 
     //creates package usable for JBL website
-    createJSONPackageObject(title, description, photosha, modelurl, modelType, price) {
-      var obj = new Object();
-      obj.title = title;
-      obj.description = description;
-      obj.modeltype = modelType;
-      obj.price = price;
-      obj.photosha = photosha;
-      obj.modelurl = modelurl;
+    createJSONPackageObject(_title, _description, _photosha, _modelurl, _modelType, _price) {
+      const obj = {
+        title = _title,
+        description = _description,
+        modeltype = _modelType,
+        price = _price,
+        photosha = _photosha,
+        modelurl = _modelurl
+      }
       return JSON.stringify(obj);
     },
 
@@ -286,16 +280,16 @@ new Vue({
     // by comparing the old most highest id to new highest id
     async isModelMapUpdated(modelMap) {
       // Get old id
-      let oldId = Object.keys(modelMap.map).length;
+      const oldId = Object.keys(modelMap.map).length;
       // Get new id
-      let newModelMap = await this.getModelMap();
-      let newId = Object.keys(newModelMap.map).length;
+      const newModelMap = await this.getModelMap();
+      const newId = Object.keys(newModelMap.map).length;
 
       return newId === oldId;
     },
     //returns whether a given url gives a valid response
     async doesFileExist(url) {
-      let response = await fetch(url);
+      const response = await fetch(url);
       return response.ok;
     },
     //checks whether photo, model and model map are uploaded or not by checking with intervals of 3 seconds
@@ -329,7 +323,7 @@ new Vue({
 
     // Increment progress bar by given amount
     incrementProgressBar(amount) {
-      let currentAmount = Number(this.styles.progressBarWidth.slice(0, -1));
+      const currentAmount = Number(this.styles.progressBarWidth.slice(0, -1));
       let newAmount = currentAmount + amount;
 
       // Avoid progress values above 100
