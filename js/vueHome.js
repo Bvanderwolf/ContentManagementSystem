@@ -7,7 +7,7 @@ new Vue({
     async loginGit() {
       this.navigateToInputFormIfLoggedIn();
 
-      const voetbaltaart = "338d81491cc7f65901b4";
+      const voetbaltaart = "client-id";
 
       // If a code has not been recieved from Github yet, navigate to Github login screen.
       url = "https://github.com/login/oauth/authorize?client_id=" + voetbaltaart + "&scope=public_repo";
@@ -19,8 +19,8 @@ new Vue({
       if (!queryParams.has("code")) return;
 
       const code = queryParams.get("code");
-      const voetbaltaart = "338d81491cc7f65901b4";
-      const basketbaltaart = "ac44a104c1a628642561d1b7961644ce681df99c";
+      const voetbaltaart = "client-id";
+      const basketbaltaart = "client-secret";
 
       // Construct url with query parameters and using cors-anywhere as reverse proxy to prevent CORS errors.
       url =
